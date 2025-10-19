@@ -1,0 +1,376 @@
+/* ===== 懷舊風格基底 ===== */
+:root {
+  --bg-color: #f2f1ec;
+  --accent: #0078d7;
+  --border-color: #c5c5c5;
+  --text-color: #222;
+  --header-bg: #e0dfd9;
+  --chip-bg: #fff;
+  --chip-border: #b0b0b0;
+  --chip-hover: #0078d7;
+  --font-family: "Courier New", monospace;
+  --success-color: #28a745;
+  --danger-color: #dc3545;
+  --warning-color: #ffc107;
+}
+
+/* 全域樣式 */
+body,
+ion-app {
+  background-color: var(--bg-color);
+  font-family: var(--font-family);
+  color: var(--text-color);
+  image-rendering: pixelated;
+  letter-spacing: 0.3px;
+}
+
+/* ===== 標頭區 ===== */
+ion-header {
+  background-color: var(--header-bg);
+  border-bottom: 2px solid var(--border-color);
+  box-shadow: inset 0 -1px 0 var(--border-color);
+}
+
+ion-toolbar {
+  background: linear-gradient(to bottom, #f8f8f8, #dcdcdc);
+  border-bottom: 2px solid var(--border-color);
+  position: relative;
+}
+
+ion-title {
+  font-weight: bold;
+  text-shadow: 1px 1px 0 #fff;
+  color: #000;
+}
+
+/* ===== 認證區域 ===== */
+#auth-section {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+#user-welcome {
+  font-size: 14px;
+  color: var(--text-color);
+  font-weight: bold;
+}
+
+/* ===== 功能按鈕區 ===== */
+#function-buttons {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* ===== 搜尋與分類 ===== */
+ion-searchbar {
+  --background: #fff;
+  --color: #000;
+  --placeholder-color: #666;
+  border: 1px solid var(--border-color);
+  border-radius: 2px;
+  margin: 8px;
+}
+
+ion-item {
+  --background: var(--header-bg);
+  border-top: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+  padding: 4px;
+}
+
+ion-select,
+ion-button {
+  font-family: var(--font-family);
+  font-size: 14px;
+}
+
+ion-select {
+  --background:none;
+  --placeholder-color: #444;
+  border-radius: 2px;
+  margin-left: 4px;
+}
+
+ion-button {
+  --background: #efefef;
+  --color: #000;
+  border: 1px solid var(--border-color);
+  border-radius: 2px;
+  box-shadow: 1px 1px 0 #fff inset, -1px -1px 0 #aaa inset;
+  text-transform: none;
+  transition: background 0.2s;
+}
+
+ion-button:hover {
+  --background: #dcdcdc;
+}
+
+/* ===== 清單樣式 ===== */
+.container {
+  padding: 10px;
+}
+
+.list-item {
+  background: #fff;
+  border: 2px solid var(--border-color);
+  border-radius: 3px;
+  margin: 10px 0;
+  padding: 8px;
+  box-shadow: 1px 1px 0 #fff inset, -1px -1px 0 #aaa inset;
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+.list-item:hover {
+  transform: scale(1.01);
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* 內容區塊 */
+.item-content {
+  padding: 6px;
+}
+
+.item-title {
+  font-weight: bold;
+  font-size: 18px;
+  color: #111;
+  text-shadow: 1px 1px 0 #fff;
+}
+
+.item-subtitle {
+  font-size: 14px;
+  color: #555;
+  margin-top: 2px;
+}
+
+.item-timeReq,
+.item-equipment {
+  font-size: 13px;
+  margin-top: 3px;
+  color: #333;
+}
+
+/* ===== 標籤 chip ===== */
+.tag-container {
+  margin-top: 6px;
+}
+
+.tag-chip {
+  background-color: var(--chip-bg);
+  border: 1px solid var(--chip-border);
+  border-radius: 2px;
+  padding: 2px 8px;
+  margin: 2px;
+  font-size: 12px;
+  color: #000;
+  transition: all 0.2s ease;
+}
+
+.tag-chip:hover {
+  background-color: var(--chip-hover);
+  color: #fff;
+  border-color: var(--chip-hover);
+  cursor: pointer;
+}
+
+/* ===== 載入狀態和錯誤處理 ===== */
+#loading-container {
+  padding: 40px 20px;
+  text-align: center;
+  background: #fff;
+  margin: 16px;
+  border: 2px solid var(--border-color);
+  border-radius: 3px;
+  box-shadow: 1px 1px 0 #fff inset, -1px -1px 0 #aaa inset;
+}
+
+#loading-container ion-spinner {
+  --color: var(--accent);
+}
+
+#loading-container p {
+  margin-top: 10px;
+  color: #666;
+  font-size: 14px;
+}
+
+#error-container {
+  margin: 16px;
+  background: #ffe6e6;
+  border: 2px solid #ff9999;
+}
+
+#error-container h3 {
+  color: var(--danger-color);
+  margin: 0 0 8px 0;
+}
+
+#error-container p {
+  color: #666;
+  margin: 0 0 12px 0;
+}
+
+#empty-state {
+  padding: 60px 20px;
+  text-align: center;
+  color: #999;
+}
+
+#empty-state ion-icon {
+  font-size: 64px;
+  color: #ddd;
+  margin-bottom: 16px;
+}
+
+#empty-state h3 {
+  color: #666;
+  margin: 0 0 8px 0;
+}
+
+#empty-state p {
+  margin: 0;
+  font-size: 14px;
+}
+
+/* ===== 收藏按鈕 ===== */
+.favorite-btn {
+  --color: #999;
+  --background: transparent;
+  transition: all 0.2s ease;
+}
+
+.favorite-btn:hover {
+  --color: #ff0000;
+  transform: scale(1.1);
+}
+
+.favorite-btn ion-icon {
+  font-size: 20px;
+}
+
+/* ===== 載入更多按鈕 ===== */
+#load-more-btn {
+  margin: 20px 16px;
+  --background: #f8f8f8;
+  --border-color: var(--border-color);
+  --color: var(--text-color);
+  border: 2px solid var(--border-color);
+  border-radius: 3px;
+  transition: all 0.2s ease;
+}
+
+#load-more-btn:hover {
+  --background: #e8e8e8;
+}
+
+#load-more-btn ion-spinner {
+  --color: var(--accent);
+}
+
+/* ===== 模態框樣式 ===== */
+ion-modal {
+  --background: var(--bg-color);
+}
+
+ion-modal ion-header {
+  border-bottom: 2px solid var(--border-color);
+}
+
+ion-modal ion-content {
+  --background: var(--bg-color);
+}
+
+ion-modal ion-item {
+  --background: #fff;
+  --border-color: var(--border-color);
+  border: 1px solid var(--border-color);
+  border-radius: 2px;
+  margin: 8px 0;
+}
+
+ion-modal ion-input {
+  --color: var(--text-color);
+  --placeholder-color: #999;
+}
+
+ion-modal ion-button[type="submit"] {
+  margin: 20px 0 10px 0;
+  --background: var(--accent);
+  --color: #fff;
+  border: 2px solid var(--accent);
+  border-radius: 3px;
+  font-weight: bold;
+}
+
+ion-modal ion-button[type="submit"]:hover {
+  --background: #0056b3;
+  --border-color: #0056b3;
+}
+
+/* ===== 成功/錯誤訊息 ===== */
+.error-message {
+  background: #ffe6e6;
+  color: var(--danger-color);
+  padding: 10px;
+  border: 1px solid #ffcccc;
+  border-radius: 3px;
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+.success-message {
+  background: #e6ffe6;
+  color: var(--success-color);
+  padding: 10px;
+  border: 1px solid #ccffcc;
+  border-radius: 3px;
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+/* ===== 響應式設計 ===== */
+@media (max-width: 768px) {
+  #auth-section {
+    flex-direction: column;
+    gap: 4px;
+  }
+  
+  #function-buttons {
+    margin-top: 8px;
+  }
+  
+  .item-content > div:first-child {
+    flex-direction: column;
+  }
+  
+  .favorite-btn {
+    align-self: flex-end;
+    margin-top: 8px;
+  }
+}
+
+/* ===== 圖片與影片 ===== */
+.item-image,
+.item-video {
+  border: 1px solid var(--border-color);
+  border-radius: 2px;
+  background-color: #f9f9f9;
+  padding: 4px;
+}
+
+/* ===== 滾動區效果 ===== */
+ion-content {
+  --background: var(--bg-color);
+}
+
+/* 小螢幕調整 */
+@media (max-width: 600px) {
+  ion-title {
+    font-size: 18px;
+  }
+  .item-title {
+    font-size: 16px;
+  }
+}
