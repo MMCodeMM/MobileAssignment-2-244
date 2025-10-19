@@ -56,5 +56,18 @@
   </ion-app>
 
   <script type="module" src="/data/trainingData.js"></script>
+  <script>
+    //調用需要身份驗證的 API
+    async function fetchProtectedData() {
+  let baseUrl = 'https://example.com/api'
+  let token = '123456'
+  let res = await fetch(`${baseUrl}/bookmarks`, {
+    method: 'GET',
+    headers: { Authorization: `Bearer ${token}` },
+  })
+  let json = await res.json()
+  console.log(json.item_ids)
+    }
+  </script>
 </body>
 </html>
