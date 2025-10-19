@@ -59,9 +59,9 @@
   <script>
     //調用需要身份驗證的 API
     async function fetchProtectedData() {
-  let baseUrl = 'https://example.com/api'
+  let baseUrl = 'https://example.com/api/exercises'
   let token = '123456'
-  let res = await fetch(`${baseUrl}/bookmarks`, {
+  let res = await fetch(`${baseUrl}/exercises`, {
     method: 'GET',
     headers: { Authorization: `Bearer ${token}` },
   })
