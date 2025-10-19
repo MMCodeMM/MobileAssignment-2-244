@@ -1,0 +1,353 @@
+    /* ===== 懷舊風格基底 ===== */
+    :root {
+      --bg-color: #f2f1ec;
+      --accent: #0078d7;
+      --border-color: #c5c5c5;
+      --text-color: #222;
+      --header-bg: #e0dfd9;
+      --chip-bg: #fff;
+      --chip-border: #b0b0b0;
+      --chip-hover: #0078d7;
+      --font-family: "Courier New", monospace;
+      --card-bg: linear-gradient(to bottom, #f8f8f8, #f0f0f0);
+    }
+
+    /* 全域樣式 */
+    body,
+    ion-app {
+      background-color: var(--bg-color);
+      font-family: var(--font-family);
+      color: var(--text-color);
+      letter-spacing: 0.3px;
+      line-height: 1.5;
+    }
+
+    /* ===== 標頭區 ===== */
+    ion-header {
+      background-color: var(--header-bg);
+      border-bottom: 2px solid var(--border-color);
+      box-shadow: inset 0 -1px 0 var(--border-color);
+    }
+
+    ion-toolbar {
+      background: linear-gradient(to bottom, #f8f8f8, #dcdcdc);
+      border-bottom: 2px solid var(--border-color);
+    }
+
+    ion-title {
+      font-weight: bold;
+      text-shadow: 1px 1px 0 #fff;
+      color: #000;
+    }
+
+    /* ===== 搜尋與分類 ===== */
+    ion-searchbar {
+      --background: #fff;
+      --color: #000;
+      --placeholder-color: #666;
+      border: 1px solid var(--border-color);
+      border-radius: 2px;
+      margin: 8px;
+    }
+
+    .category-header {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding: 8px 16px;
+      background: var(--header-bg);
+      border-top: 1px solid var(--border-color);
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    @media (max-width: 768px) {
+      .category-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+      }
+    }
+
+    ion-select,
+    ion-button {
+      font-family: var(--font-family);
+      font-size: 14px;
+    }
+
+    ion-select {
+      --background: #fff;
+      --placeholder-color: #444;
+      border: 1px solid var(--border-color);
+      border-radius: 2px;
+      padding: 4px 8px;
+      min-width: 150px;
+      background: #fff;
+    }
+
+    ion-button {
+      --background: #efefef;
+      --color: #000;
+      border: 1px solid var(--border-color);
+      border-radius: 2px;
+      box-shadow: 1px 1px 0 #fff inset, -1px -1px 0 #aaa inset;
+      text-transform: none;
+      transition: background 0.2s;
+      margin-left: 10px;
+    }
+
+    ion-button:hover {
+      --background: #dcdcdc;
+    }
+
+    /* ===== 清單樣式 ===== */
+    .container {
+      padding: 10px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .exercise-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 15px;
+      margin-top: 15px;
+    }
+    
+    @media (max-width: 600px) {
+      .exercise-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .exercise-card {
+      background: var(--card-bg);
+      border: 2px solid var(--border-color);
+      border-radius: 4px;
+      box-shadow: 1px 1px 0 #fff inset, -1px -1px 0 #aaa inset;
+      transition: transform 0.1s ease, box-shadow 0.1s ease;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    .exercise-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+      border-color: var(--accent);
+    }
+
+    /* 内容区塊 */
+    .card-content {
+      flex: 1;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card-title {
+      font-weight: bold;
+      font-size: 18px;
+      color: #111;
+      text-shadow: 1px 1px 0 #fff;
+      margin-bottom: 6px;
+      line-height: 1.3;
+    }
+
+    .card-subtitle {
+      font-size: 14px;
+      color: #555;
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px dotted var(--border-color);
+    }
+
+    .card-meta {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+    
+    .meta-item {
+      display: flex;
+      flex-direction: column;
+      font-size: 13px;
+      min-width: 100px;
+    }
+    
+    .meta-label {
+      font-weight: bold;
+      color: #444;
+      text-transform: uppercase;
+      font-size: 11px;
+      letter-spacing: 0.5px;
+    }
+    
+    .meta-value {
+      color: #333;
+      font-size: 13px;
+    }
+
+    /* ===== 標籤 chip ===== */
+    .tag-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: auto;
+      padding-top: 8px;
+    }
+
+    .tag-chip {
+      background-color: var(--chip-bg);
+      border: 1px solid var(--chip-border);
+      border-radius: 2px;
+      padding: 2px 8px;
+      font-size: 11px;
+      color: #000;
+      transition: all 0.2s ease;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .tag-chip:hover {
+      background-color: var(--chip-hover);
+      color: #fff;
+      border-color: var(--chip-hover);
+    }
+
+    /* ===== 圖片與影片 ===== */
+    .card-media {
+      position: relative;
+      height: 160px;
+      background: repeating-linear-gradient(
+        45deg,
+        #f0f0f0,
+        #f0f0f0 10px,
+        #e0e0e0 10px,
+        #e0e0e0 20px
+      );
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .media-placeholder {
+      color: #777;
+      font-size: 14px;
+      text-align: center;
+      padding: 10px;
+    }
+
+    .card-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .video-indicator {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: rgba(0,0,0,0.7);
+      color: white;
+      padding: 3px 8px;
+      border-radius: 2px;
+      font-size: 11px;
+      z-index: 2;
+    }
+    
+    .play-icon {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform transform: translate(-50%, -50%);
+      width: 36px;
+      height: 36px;
+      background: rgba(0, 120, 215, 0.8);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1;
+      cursor: pointer;
+    }
+    
+    .play-icon i {
+      color: white;
+      font-size: 16px;
+      margin-left: 2px;
+    }
+    
+    /* 无结果提示 */
+    .no-results {
+      text-align: center;
+      padding: 40px 20px;
+      color: #777;
+      background: #fff;
+      border: 2px solid var(--border-color);
+      border-radius: 4px;
+      margin: 20px;
+      box-shadow: 1px 1px 0 #fff inset, -1px -1px 0 #aaa inset;
+      grid-column: 1 / -1;
+    }
+    
+    .no-results i {
+      font-size: 48px;
+      margin-bottom: 15px;
+      color: #ddd;
+    }
+    
+    /* 统计数据 */
+    .stats-bar {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 16px;
+      background: var(--header-bg);
+      border-top: 1px solid var(--border-color);
+      border-bottom: 1px solid var(--border-color);
+      font-size: 14px;
+      color: #555;
+    }
+    
+    .filter-indicator {
+      background: var(--chip-bg);
+      border: 1px solid var(--chip-border);
+      border-radius: 2px;
+      padding: 2px 8px;
+      font-size: 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    
+    .filter-indicator i {
+      cursor: pointer;
+    }
+    
+    /* 页脚 */
+    .footer {
+      text-align: center;
+      padding: 20px;
+      border-top: 1px solid var(--border-color);
+      margin-top: 20px;
+      font-size: 13px;
+      color: #666;
+    }
+    
+    /* 小屏幕调整 */
+    @media (max-width: 600px) {
+      ion-title {
+        font-size: 18px;
+      }
+      .card-title {
+        font-size: 16px;
+      }
+      .stats-bar {
+        flex-direction: column;
+        gap: 8px;
+        align-items: center;
+      }
+    }

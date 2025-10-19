@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MAX教學運動平台</title>
+  <script type="module" src="https://cdn.jsdelivr.net/npm/@ionic/core/dist/ionic/ionic.esm.js"></script>
+  <script nomodule src="https://cdn.jsdelivr.net/npm/@ionic/core/dist/ionic/ionic.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@ionic/core/css/ionic.bundle.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <ion-app>
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>MAX教學運動平台</ion-title>
+      </ion-toolbar>
+
+      <ion-searchbar id="search-bar" placeholder="搜尋..."></ion-searchbar>
+
+      <div class="category-header">
+        <ion-select id="category-select" label="分類" interface="popover" class="category-select">
+          <ion-select-option value="">全部</ion-select-option>
+        </ion-select>
+        <ion-button id="reset-category" fill="clear">重設篩選</ion-button>
+      </div>
+
+      <div class="stats-bar">
+        <div>共 <span id="total-count">20</span> 個項目</div>
+        <div>已篩選: <span id="filter-count">20</span> 個項目</div>
+        <div>當前分類: 
+          <span id="active-filter" class="filter-indicator">全部</span>
+          <i class="fas fa-times-circle" id="clear-filter" style="cursor:pointer;"></i>
+        </div>
+      </div>
+    </ion-header>
+
+    <ion-content>
+      <div id="content-wrapper">
+        <div class="container">
+          <div class="exercise-grid" id="exercise-grid"></div>
+
+          <div id="no-results" class="no-results">
+            <i class="fas fa-dumbbell"></i>
+            <h3>沒有找到相關項目</h3>
+            <p>請嘗試其他搜尋詞或重設篩選條件</p>
+          </div>
+        </div>
+      </div>
+    </ion-content>
+
+    <div class="footer">
+      <p>MAX運動教學平台 © 2025 | 經典設計，專業教學</p>
+    </div>
+  </ion-app>
+
+  <script type="module" src="/data/trainingData.js"></script>
+</body>
+</html>
