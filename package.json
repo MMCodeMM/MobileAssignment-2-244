@@ -1,0 +1,27 @@
+{
+  "name": "mobileassignment-2-244",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MMCodeMM/MobileAssignment-2-244.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MMCodeMM/MobileAssignment-2-244/issues"
+  },
+  "homepage": "https://github.com/MMCodeMM/MobileAssignment-2-244#readme",
+  "dependencies": {
+    "@types/express": "^5.0.3",
+    "express": "^5.1.0",
+    "listening-on": "^2.0.9",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
+  }
+}
