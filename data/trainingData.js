@@ -221,10 +221,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
         async function fetchProtectedData() {
   let baseUrl = 'https://dae-mobile-assignment.hkit.cc/api/exercises'
-  let token = '123456'
+  //let token = '123456'
   let res = await fetch(`${baseUrl}/exercises`, {
     method: 'GET',
-    headers: { Authorization: `Bearer ${token}` },
+    //headers: { Authorization: `Bearer ${token}` },
   })
   let json = await res.json()
   console.log(json.item_ids)
