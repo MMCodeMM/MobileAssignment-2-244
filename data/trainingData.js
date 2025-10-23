@@ -58,6 +58,14 @@ document.addEventListener("DOMContentLoaded", () => {
   function populateCategorySelect() {
     // 先清空，避免重複選項
     while (categorySelect.firstChild) categorySelect.removeChild(categorySelect.firstChild);
+    
+    // 首先添加"全部"選項
+    const allOption = document.createElement("ion-select-option");
+    allOption.value = "";
+    allOption.textContent = "全部";
+    categorySelect.appendChild(allOption);
+    
+    // 然後添加唯一的標籤選項
     const unique = getUniqueTags();
     unique.forEach(tag => {
       const el = document.createElement("ion-select-option");
@@ -65,6 +73,9 @@ document.addEventListener("DOMContentLoaded", () => {
       el.textContent = tag;
       categorySelect.appendChild(el);
     });
+    
+    // 重設選擇器的值為"全部"
+    categorySelect.value = "";
   }
 
   async function renderGrid(filteredItems) {
@@ -117,8 +128,14 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function applyFilters() {
+    // 重新獲取DOM元素，確保引用正確
+    const searchbar = document.getElementById("search-bar");
+    const categorySelect = document.getElementById("category-select");
+    
     const q = (searchbar?.value || "").toLowerCase().trim();
     const cat = categorySelect?.value || "";
+
+    console.log("套用篩選 - 搜尋詞:", q, "分類:", cat);
 
     const filtered = (originalItems || []).filter(it => {
       const matchesSearch =
@@ -149,17 +166,42 @@ document.addEventListener("DOMContentLoaded", () => {
       console.log(`正在搜尋: "${q}"`);
     }
 
+    console.log("篩選結果:", filtered.length, "筆，總數:", originalItems.length);
     renderGrid(filtered);
   }
 
   function setupEventListeners() {
-    if (searchbar) searchbar.addEventListener("ionInput", () => applyFilters());
-    if (categorySelect) categorySelect.addEventListener("ionChange", () => applyFilters());
+    // 搜尋框事件
+    const searchbar = document.getElementById("search-bar");
+    if (searchbar) {
+      // 移除舊的事件監聽器
+      searchbar.removeEventListener("ionInput", applyFilters);
+      // 添加新的事件監聽器
+      searchbar.addEventListener("ionInput", (e) => {
+        console.log("搜尋輸入:", e.detail.value);
+        applyFilters();
+      });
+    }
+    
+    // 分類選擇器事件
+    if (categorySelect) {
+      // 移除舊的事件監聽器
+      categorySelect.removeEventListener("ionChange", applyFilters);
+      // 添加新的事件監聽器
+      categorySelect.addEventListener("ionChange", (e) => {
+        console.log("分類變更:", e.detail.value);
+        applyFilters();
+      });
+    }
+    
+    // 重設按鈕事件
     if (resetBtn) {
       resetBtn.addEventListener("click", () => {
+        console.log("重設篩選");
         // 重設所有篩選條件
         categorySelect.value = "";
-        searchbar.value = "";
+        const searchbar = document.getElementById("search-bar");
+        if (searchbar) searchbar.value = "";
         
         // 顯示重設提示
         const toast = document.createElement('div');
@@ -172,19 +214,26 @@ document.addEventListener("DOMContentLoaded", () => {
         `;
         document.body.appendChild(toast);
         setTimeout(() => {
-          document.body.removeChild(toast);
+          if (document.body.contains(toast)) {
+            document.body.removeChild(toast);
+          }
         }, 2000);
         
         applyFilters();
       });
     }
+    
+    // 清除分類按鈕事件
     if (clearFilterBtn) {
       clearFilterBtn.addEventListener("click", e => {
         e.stopPropagation();
+        console.log("清除分類篩選");
         categorySelect.value = "";
         applyFilters();
       });
     }
+    
+    console.log("事件監聽器設置完成");
   }
 
   async function fetchExercises() {
@@ -225,15 +274,27 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    // 成功後刷新分類及事件
+    // 成功後刷新分類
     populateCategorySelect();
-    // 確保事件綁定一次
-    if (!isRetry) setupEventListeners();
+    
+    // 等待一下讓Ionic元件完全載入
+    await new Promise(resolve => setTimeout(resolve, 100));
+    
+    // 總是重新設置事件監聽器，確保功能正常
+    setupEventListeners();
 
     // 首次渲染（未輸入搜尋與分類時顯示全部）
     applyFilters();
+    
+    console.log("初始化完成，資料數量:", originalItems.length);
   }
 
-  // 啟動
-  init();
+  // 啟動，等待DOM和Ionic完全載入
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+      setTimeout(init, 500); // 給Ionic更多時間初始化
+    });
+  } else {
+    setTimeout(init, 500);
+  }
 });
