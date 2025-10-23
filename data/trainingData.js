@@ -15,6 +15,16 @@ document.addEventListener("DOMContentLoaded", () => {
   const filterCountElement = document.getElementById("filter-count");
   const activeFilterElement = document.getElementById("active-filter");
   const clearFilterBtn = document.getElementById("clear-filter");
+  
+  // 圖片模態窗口元素
+  const imageModal = document.getElementById("image-modal");
+  const modalImage = document.getElementById("modal-image");
+  const modalTitle = document.getElementById("modal-title");
+  const modalClose = document.getElementById("modal-close");
+  const modalBackdrop = document.getElementById("modal-backdrop");
+  const imageLoading = document.getElementById("image-loading");
+  const imageError = document.getElementById("image-error");
+  const imageInfo = document.getElementById("image-info");
 
   // 初始狀態
   totalCountElement.textContent = "0";
@@ -118,6 +128,73 @@ document.addEventListener("DOMContentLoaded", () => {
     return url.includes('youtube.com') || url.includes('youtu.be');
   }
 
+  // 圖片模態窗口功能
+  function openImageModal(imageUrl, title, itemData) {
+    if (!imageUrl) return;
+    
+    // 顯示模態窗口
+    imageModal.style.display = 'flex';
+    document.body.style.overflow = 'hidden'; // 防止背景滾動
+    
+    // 設置標題
+    modalTitle.textContent = title || '圖片預覽';
+    
+    // 顯示載入狀態
+    imageLoading.style.display = 'flex';
+    imageError.style.display = 'none';
+    modalImage.style.display = 'none';
+    
+    // 設置圖片資訊
+    let infoText = `圖片來源: ${imageUrl}`;
+    if (itemData) {
+      if (itemData.level) infoText += ` | 等級: ${itemData.level}`;
+      if (itemData.equipment) infoText += ` | 器材: ${itemData.equipment}`;
+    }
+    imageInfo.textContent = infoText;
+    
+    // 載入圖片
+    const img = new Image();
+    img.onload = () => {
+      modalImage.src = imageUrl;
+      modalImage.alt = title || '放大圖片';
+      imageLoading.style.display = 'none';
+      modalImage.style.display = 'block';
+      console.log('模態圖片載入成功:', imageUrl);
+    };
+    
+    img.onerror = () => {
+      imageLoading.style.display = 'none';
+      imageError.style.display = 'flex';
+      console.error('模態圖片載入失敗:', imageUrl);
+    };
+    
+    img.src = imageUrl;
+  }
+
+  function closeImageModal() {
+    imageModal.style.display = 'none';
+    document.body.style.overflow = 'auto'; // 恢復背景滾動
+    modalImage.src = ''; // 清除圖片源以停止載入
+  }
+
+  // 設置模態窗口事件監聽器
+  function setupModalEvents() {
+    if (modalClose) {
+      modalClose.addEventListener('click', closeImageModal);
+    }
+    
+    if (modalBackdrop) {
+      modalBackdrop.addEventListener('click', closeImageModal);
+    }
+    
+    // ESC鍵關閉模態窗口
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && imageModal.style.display === 'flex') {
+        closeImageModal();
+      }
+    });
+  }
+
   // 測試圖片URL是否可訪問
   async function testImageUrl(url) {
     try {
@@ -146,14 +223,55 @@ document.addEventListener("DOMContentLoaded", () => {
       const card = document.createElement("div");
       card.className = "exercise-card";
 
-      // 改善媒體內容處理
+      // 改善媒體內容處理 - 同時顯示圖片和影片
       let mediaContent = "";
       console.log("處理項目:", item.title, "圖片:", item.imageUrl, "影片:", item.videoUrl, "YouTube:", item.isYouTube);
       
       if (item?.imageUrl || item?.videoUrl) {
         mediaContent = `<div class="card-media">`;
         
+        // 媒體狀態指示器
+        let indicators = [];
+        if (item.imageUrl) indicators.push('<i class="fas fa-image"></i> 圖片');
         if (item.videoUrl) {
+          if (item.isYouTube) {
+            indicators.push('<i class="fab fa-youtube"></i> YouTube');
+          } else {
+            indicators.push('<i class="fas fa-video"></i> 影片');
+          }
+        }
+        
+        if (indicators.length > 0) {
+          mediaContent += `
+            <div class="media-indicators">
+              ${indicators.join(' • ')}
+            </div>
+          `;
+        }
+        
+        // 如果有圖片，先顯示圖片
+        if (item.imageUrl) {
+          console.log("渲染圖片:", item.imageUrl);
+          mediaContent += `
+            <div class="media-image-section" data-image-url="${item.imageUrl}" data-title="${item.title || ''}" data-item='${JSON.stringify(item)}'>
+              <img src="${item.imageUrl}" 
+                   alt="${item.title || ''}" 
+                   class="exercise-img" 
+                   loading="lazy"
+                   onload="console.log('圖片載入成功:', this.src)"
+                   onerror="console.error('圖片載入失敗:', this.src); this.style.display='none'; this.nextElementSibling.style.display='flex';">
+              <div class="media-placeholder" style="display:none;">
+                <i class="fas fa-image"></i>
+                <div>圖片載入失敗</div>
+              </div>
+            </div>
+          `;
+        }
+        
+        // 如果有影片，在圖片下方顯示影片
+        if (item.videoUrl) {
+          mediaContent += `<div class="media-video-section">`;
+          
           if (item.isYouTube) {
             // YouTube影片使用iframe嵌入
             console.log("渲染YouTube影片:", item.youtubeEmbedUrl);
@@ -174,7 +292,7 @@ document.addEventListener("DOMContentLoaded", () => {
             // 普通影片使用video標籤
             console.log("渲染普通影片:", item.videoUrl);
             mediaContent += `
-              <video class="exercise-video" controls preload="metadata" poster="${item.imageUrl || ''}">
+              <video class="exercise-video" controls preload="metadata">
                 <source src="${item.videoUrl}" type="video/mp4">
                 您的瀏覽器不支援影片播放
               </video>
@@ -184,19 +302,16 @@ document.addEventListener("DOMContentLoaded", () => {
               </div>
             `;
           }
-        } else if (item.imageUrl) {
-          // 只有圖片時顯示圖片
-          console.log("渲染圖片:", item.imageUrl);
+          
+          mediaContent += `</div>`;
+        }
+        
+        // 如果既沒有圖片也沒有影片
+        if (!item.imageUrl && !item.videoUrl) {
           mediaContent += `
-            <img src="${item.imageUrl}" 
-                 alt="${item.title || ''}" 
-                 class="exercise-img" 
-                 loading="lazy"
-                 onload="console.log('圖片載入成功:', this.src)"
-                 onerror="console.error('圖片載入失敗:', this.src); this.style.display='none'; this.nextElementSibling.style.display='flex';">
-            <div class="media-placeholder" style="display:none;">
+            <div class="media-placeholder">
               <i class="fas fa-image"></i>
-              <div>圖片載入失敗</div>
+              <div>無媒體內容</div>
             </div>
           `;
         }
@@ -242,6 +357,33 @@ document.addEventListener("DOMContentLoaded", () => {
           }
         });
       });
+
+      // 綁定圖片點擊事件
+      const imageSection = card.querySelector('.media-image-section');
+      if (imageSection) {
+        imageSection.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          
+          const imageUrl = imageSection.getAttribute('data-image-url');
+          const title = imageSection.getAttribute('data-title');
+          const itemDataStr = imageSection.getAttribute('data-item');
+          
+          let itemData = null;
+          try {
+            itemData = JSON.parse(itemDataStr);
+          } catch (err) {
+            console.error('解析項目資料失敗:', err);
+          }
+          
+          console.log('點擊圖片:', title, imageUrl);
+          openImageModal(imageUrl, title, itemData);
+        });
+        
+        // 添加視覺提示
+        imageSection.style.cursor = 'pointer';
+        imageSection.title = '點擊放大圖片';
+      }
 
       grid.appendChild(card);
     }
@@ -468,9 +610,11 @@ document.addEventListener("DOMContentLoaded", () => {
   // 啟動，等待DOM和Ionic完全載入
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
+      setupModalEvents(); // 設置模態窗口事件
       setTimeout(init, 500); // 給Ionic更多時間初始化
     });
   } else {
+    setupModalEvents(); // 設置模態窗口事件
     setTimeout(init, 500);
   }
 });

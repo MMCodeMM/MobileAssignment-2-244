@@ -64,6 +64,33 @@
     <div class="footer">
       <p>MAX運動教學平台 © 2025 | 經典設計，專業教學</p>
     </div>
+
+    <!-- 圖片放大預覽模態 -->
+    <div id="image-modal" class="image-modal" style="display: none;">
+      <div class="modal-backdrop" id="modal-backdrop"></div>
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 id="modal-title">圖片預覽</h3>
+          <button class="modal-close" id="modal-close">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+          <img id="modal-image" src="" alt="放大圖片" />
+          <div class="image-loading" id="image-loading">
+            <i class="fas fa-spinner fa-spin"></i>
+            <div>載入中...</div>
+          </div>
+          <div class="image-error" id="image-error" style="display: none;">
+            <i class="fas fa-exclamation-triangle"></i>
+            <div>圖片載入失敗</div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <div class="image-info" id="image-info"></div>
+        </div>
+      </div>
+    </div>
   </ion-app>
 
   <script type="module" src="/data/trainingData.js"></script>
