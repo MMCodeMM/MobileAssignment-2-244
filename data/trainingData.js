@@ -117,7 +117,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function applyFilters() {
-    const q = (searchbar?.value || "").toLowerCase();
+    const q = (searchbar?.value || "").toLowerCase().trim();
     const cat = categorySelect?.value || "";
 
     const filtered = (originalItems || []).filter(it => {
@@ -133,13 +133,20 @@ document.addEventListener("DOMContentLoaded", () => {
       return matchesSearch && matchesCategory;
     });
 
+    // 更新篩選指示器
     if (cat) {
       activeFilterElement.textContent = cat;
       activeFilterElement.style.display = "inline-flex";
       clearFilterBtn.style.display = "inline";
     } else {
-      activeFilterElement.style.display = "none";
+      activeFilterElement.textContent = "全部";
+      activeFilterElement.style.display = "inline-flex";
       clearFilterBtn.style.display = "none";
+    }
+
+    // 如果有搜尋詞，也顯示在介面上
+    if (q) {
+      console.log(`正在搜尋: "${q}"`);
     }
 
     renderGrid(filtered);
@@ -150,8 +157,24 @@ document.addEventListener("DOMContentLoaded", () => {
     if (categorySelect) categorySelect.addEventListener("ionChange", () => applyFilters());
     if (resetBtn) {
       resetBtn.addEventListener("click", () => {
+        // 重設所有篩選條件
         categorySelect.value = "";
         searchbar.value = "";
+        
+        // 顯示重設提示
+        const toast = document.createElement('div');
+        toast.textContent = '已重設所有篩選條件';
+        toast.style.cssText = `
+          position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+          background: #4CAF50; color: white; padding: 10px 20px;
+          border-radius: 4px; z-index: 1000; font-size: 14px;
+          box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        `;
+        document.body.appendChild(toast);
+        setTimeout(() => {
+          document.body.removeChild(toast);
+        }, 2000);
+        
         applyFilters();
       });
     }
@@ -159,8 +182,6 @@ document.addEventListener("DOMContentLoaded", () => {
       clearFilterBtn.addEventListener("click", e => {
         e.stopPropagation();
         categorySelect.value = "";
-        activeFilterElement.style.display = "none";
-        clearFilterBtn.style.display = "none";
         applyFilters();
       });
     }

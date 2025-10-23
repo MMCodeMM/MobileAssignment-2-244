@@ -93,10 +93,17 @@
       text-transform: none;
       transition: background 0.2s;
       margin-left: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
 
     ion-button:hover {
       --background: #dcdcdc;
+    }
+    
+    ion-button i {
+      font-size: 12px;
     }
 
     /* ===== 清單樣式 ===== */
@@ -329,6 +336,19 @@
       border-bottom: 1px solid var(--border-color);
       font-size: 14px;
       color: #555;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    
+    .stats-item {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    
+    .stats-item i {
+      color: var(--accent);
+      width: 14px;
     }
     
     .filter-indicator {
@@ -340,10 +360,17 @@
       display: inline-flex;
       align-items: center;
       gap: 4px;
+      margin-left: 4px;
     }
     
     .filter-indicator i {
       cursor: pointer;
+      color: #c33;
+      transition: color 0.2s;
+    }
+    
+    .filter-indicator i:hover {
+      color: #e55;
     }
     
     /* 页脚 */

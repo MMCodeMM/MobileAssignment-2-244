@@ -23,15 +23,26 @@
         <ion-select id="category-select" label="分類" interface="popover" class="category-select">
           <ion-select-option value="">全部</ion-select-option>
         </ion-select>
-        <ion-button id="reset-category" fill="clear">重設篩選</ion-button>
+        <ion-button id="reset-category" fill="clear">
+          <i class="fas fa-undo"></i>
+          重設篩選
+        </ion-button>
       </div>
 
       <div class="stats-bar">
-        <div>共 <span id="total-count">20</span> 個項目</div>
-        <div>已篩選: <span id="filter-count">20</span> 個項目</div>
-        <div>當前分類: 
+        <div class="stats-item">
+          <i class="fas fa-list"></i>
+          共 <span id="total-count">20</span> 個項目
+        </div>
+        <div class="stats-item">
+          <i class="fas fa-filter"></i>
+          顯示: <span id="filter-count">20</span> 個項目
+        </div>
+        <div class="stats-item">
+          <i class="fas fa-tag"></i>
+          當前分類: 
           <span id="active-filter" class="filter-indicator">全部</span>
-          <i class="fas fa-times-circle" id="clear-filter" style="cursor:pointer;"></i>
+          <i class="fas fa-times-circle" id="clear-filter" style="cursor:pointer; margin-left: 4px;" title="清除分類篩選"></i>
         </div>
       </div>
     </ion-header>
