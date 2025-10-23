@@ -6,7 +6,7 @@ const importedItems = [
     timeReq: "2hr",
     equipment: "Dumbbell",
     tags: ["gym", "Dumbbell Training", "Chest"],
-    imageUrl: "",
+    imageUrl: "src/DumbbellChestPress.png",
     videoUrl: "",
   },
   {
