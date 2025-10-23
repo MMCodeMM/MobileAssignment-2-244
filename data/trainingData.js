@@ -218,7 +218,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   async function renderGrid(filteredItems) {
-
+    grid.innerHTML = "Loading...";
         async function fetchProtectedData() {
   let baseUrl = 'https://dae-mobile-assignment.hkit.cc/api/exercises'
   let res = await fetch(`${baseUrl}/exercises`, {
@@ -228,7 +228,6 @@ document.addEventListener("DOMContentLoaded", () => {
   console.log(json.item_ids)
   let items = json.items
     }
-    grid.innerHTML = "";
 
     if (filteredItems.length === 0) {
       noResultsElement.style.display = "block";
