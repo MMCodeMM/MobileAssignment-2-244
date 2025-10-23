@@ -242,34 +242,55 @@
       font-size: 14px;
       text-align: center;
       padding: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .media-placeholder i {
+      font-size: 24px;
+      color: #ccc;
     }
 
     .card-image,
     .exercise-img {
       width: 100%;
       height: 100%;
-      object-fit: contain;
+      object-fit: cover;
       object-position: center;
       transition: transform 0.3s ease;
       background-color: #ffffff;
       border-radius: 2px;
     }
 
+    .exercise-video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      background-color: #000;
+      border-radius: 2px;
+    }
+
+    .exercise-youtube {
+      width: 100%;
+      height: 100%;
+      border: none;
+      border-radius: 2px;
+    }
+
     .card-image:hover,
-    .exercise-img:hover {
+    .exercise-img:hover,
+    .exercise-video:hover,
+    .exercise-youtube:hover {
       transform: scale(1.02);
     }
 
-    /* 圖片載入失敗時的樣式 */
-    .card-image:not([src]),
-    .exercise-img:not([src]),
-    .card-image[src=""],
-    .exercise-img[src=""] {
-      display: none;
-    }
-
     .exercise-card:hover .card-image,
-    .exercise-card:hover .exercise-img {
+    .exercise-card:hover .exercise-img,
+    .exercise-card:hover .exercise-video,
+    .exercise-card:hover .exercise-youtube {
       transform: scale(1.05);
     }
 
@@ -277,12 +298,23 @@
       position: absolute;
       top: 10px;
       right: 10px;
-      background: rgba(0,0,0,0.7);
+      background: rgba(0,0,0,0.8);
       color: white;
-      padding: 3px 8px;
-      border-radius: 2px;
-      font-size: 11px;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 12px;
       z-index: 2;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    
+    .youtube-indicator {
+      background: rgba(255, 0, 0, 0.9);
+    }
+    
+    .video-indicator i {
+      font-size: 14px;
     }
     
     .play-icon {
@@ -290,21 +322,41 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      width: 36px;
-      height: 36px;
-      background: rgba(0, 120, 215, 0.8);
+      width: 48px;
+      height: 48px;
+      background: rgba(0, 120, 215, 0.9);
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       z-index: 1;
       cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    
+    .play-icon:hover {
+      background: rgba(0, 120, 215, 1);
     }
     
     .play-icon i {
       color: white;
-      font-size: 16px;
+      font-size: 20px;
       margin-left: 2px;
+    }
+    
+    /* 圖片載入失敗處理 */
+    .exercise-img[src=""],
+    .exercise-img:not([src]) {
+      display: none;
+    }
+    
+    /* 影片控制項樣式 */
+    .exercise-video::-webkit-media-controls {
+      background-color: rgba(0, 0, 0, 0.8);
+    }
+    
+    .exercise-video::-webkit-media-controls-panel {
+      background-color: rgba(0, 0, 0, 0.8);
     }
     
     /* 无结果提示 */

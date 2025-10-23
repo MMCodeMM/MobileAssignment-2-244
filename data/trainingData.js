@@ -78,6 +78,57 @@ document.addEventListener("DOMContentLoaded", () => {
     categorySelect.value = "";
   }
 
+  // 處理URL，確保是完整的URL
+  function processMediaUrl(url, baseUrl = "https://dae-mobile-assignment.hkit.cc") {
+    if (!url) return null;
+    
+    // 如果是完整URL，直接返回
+    if (url.startsWith('http://') || url.startsWith('https://')) {
+      return url;
+    }
+    
+    // 如果是相對路徑，加上base URL
+    if (url.startsWith('/')) {
+      return baseUrl + url;
+    }
+    
+    // 如果沒有開頭斜線，也加上
+    return baseUrl + '/' + url;
+  }
+
+  // 處理YouTube URL，轉換為嵌入格式
+  function processYouTubeUrl(url) {
+    if (!url) return null;
+    
+    // 檢查是否為YouTube URL
+    const youtubeRegex = /(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]+)/;
+    const match = url.match(youtubeRegex);
+    
+    if (match) {
+      const videoId = match[1];
+      return `https://www.youtube.com/embed/${videoId}`;
+    }
+    
+    return url;
+  }
+
+  // 檢查是否為YouTube URL
+  function isYouTubeUrl(url) {
+    if (!url) return false;
+    return url.includes('youtube.com') || url.includes('youtu.be');
+  }
+
+  // 測試圖片URL是否可訪問
+  async function testImageUrl(url) {
+    try {
+      const response = await fetch(url, { method: 'HEAD' });
+      return response.ok;
+    } catch (err) {
+      console.error("圖片URL測試失敗:", url, err);
+      return false;
+    }
+  }
+
   async function renderGrid(filteredItems) {
     grid.innerHTML = "";
 
@@ -95,9 +146,74 @@ document.addEventListener("DOMContentLoaded", () => {
       const card = document.createElement("div");
       card.className = "exercise-card";
 
-      const mediaContent = item?.imageUrl
-        ? `<div class="card-media"><img src="${item.imageUrl}" alt="${item.title || ''}" class="exercise-img" loading="lazy"></div>`
-        : `<div class="card-media"><div class="media-placeholder"><i class="fas fa-image"></i><div>無媒體內容</div></div></div>`;
+      // 改善媒體內容處理
+      let mediaContent = "";
+      console.log("處理項目:", item.title, "圖片:", item.imageUrl, "影片:", item.videoUrl, "YouTube:", item.isYouTube);
+      
+      if (item?.imageUrl || item?.videoUrl) {
+        mediaContent = `<div class="card-media">`;
+        
+        if (item.videoUrl) {
+          if (item.isYouTube) {
+            // YouTube影片使用iframe嵌入
+            console.log("渲染YouTube影片:", item.youtubeEmbedUrl);
+            mediaContent += `
+              <iframe class="exercise-youtube" 
+                      src="${item.youtubeEmbedUrl}" 
+                      title="${item.title || ''}"
+                      frameborder="0" 
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                      allowfullscreen>
+              </iframe>
+              <div class="video-indicator youtube-indicator">
+                <i class="fab fa-youtube"></i>
+                YouTube
+              </div>
+            `;
+          } else {
+            // 普通影片使用video標籤
+            console.log("渲染普通影片:", item.videoUrl);
+            mediaContent += `
+              <video class="exercise-video" controls preload="metadata" poster="${item.imageUrl || ''}">
+                <source src="${item.videoUrl}" type="video/mp4">
+                您的瀏覽器不支援影片播放
+              </video>
+              <div class="video-indicator">
+                <i class="fas fa-play-circle"></i>
+                影片
+              </div>
+            `;
+          }
+        } else if (item.imageUrl) {
+          // 只有圖片時顯示圖片
+          console.log("渲染圖片:", item.imageUrl);
+          mediaContent += `
+            <img src="${item.imageUrl}" 
+                 alt="${item.title || ''}" 
+                 class="exercise-img" 
+                 loading="lazy"
+                 onload="console.log('圖片載入成功:', this.src)"
+                 onerror="console.error('圖片載入失敗:', this.src); this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="media-placeholder" style="display:none;">
+              <i class="fas fa-image"></i>
+              <div>圖片載入失敗</div>
+            </div>
+          `;
+        }
+        
+        mediaContent += `</div>`;
+      } else {
+        // 沒有媒體內容時的預設顯示
+        console.log("無媒體內容項目:", item.title);
+        mediaContent = `
+          <div class="card-media">
+            <div class="media-placeholder">
+              <i class="fas fa-image"></i>
+              <div>無媒體內容</div>
+            </div>
+          </div>
+        `;
+      }
 
       const tagsContent = Array.isArray(item?.tags)
         ? item.tags.map(tag => `<div class="tag-chip">${tag}</div>`).join("")
@@ -116,15 +232,21 @@ document.addEventListener("DOMContentLoaded", () => {
         ${mediaContent}
       `;
 
+      // 綁定標籤點擊事件
       card.querySelectorAll(".tag-chip").forEach(chip => {
         chip.addEventListener("click", () => {
-          categorySelect.value = chip.textContent;
-          applyFilters();
+          const categorySelect = document.getElementById("category-select");
+          if (categorySelect) {
+            categorySelect.value = chip.textContent;
+            applyFilters();
+          }
         });
       });
 
       grid.appendChild(card);
     }
+    
+    console.log("渲染完成，顯示", filteredItems.length, "個項目");
   }
 
   function applyFilters() {
@@ -239,26 +361,80 @@ document.addEventListener("DOMContentLoaded", () => {
   async function fetchExercises() {
     const baseUrl = "https://dae-mobile-assignment.hkit.cc/api";
     try {
-      const res = await fetch(`${baseUrl}/exercises`, { method: "GET" });
+      console.log("開始請求API...");
+      const res = await fetch(`${baseUrl}/exercises`, { 
+        method: "GET",
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      console.log("API回應狀態:", res.status, res.statusText);
+      
       if (!res.ok) {
-        showError(`讀取資料失敗（HTTP ${res.status}）`);
+        showError(`讀取資料失敗（HTTP ${res.status} ${res.statusText}）`);
         return false;
       }
+      
       const json = await res.json();
-      console.log("load list json =", json);
+      console.log("API回應完整資料:", json);
+      
       if (!json || json.error) {
         showError(json?.error || "API 回應異常");
         return false;
       }
       if (!Array.isArray(json.items)) {
+        console.error("API 回應格式:", json);
         showError("API 回傳格式不正確：缺少 items 陣列");
         return false;
       }
-      originalItems = json.items.map(i => ({ ...i, tags: Array.isArray(i.tags) ? [...i.tags] : [] }));
+      
+      // 處理資料並檢查媒體檔案
+      originalItems = json.items.map(i => {
+        const processedItem = { 
+          ...i, 
+          tags: Array.isArray(i.tags) ? [...i.tags] : [],
+          // 處理媒體URL - 注意API使用下劃線命名
+          imageUrl: processMediaUrl(i.image_url),
+          videoUrl: i.video_url, // YouTube URL 保持原樣
+          youtubeEmbedUrl: isYouTubeUrl(i.video_url) ? processYouTubeUrl(i.video_url) : null,
+          isYouTube: isYouTubeUrl(i.video_url),
+          // 保留原始欄位
+          image_url: i.image_url,
+          video_url: i.video_url
+        };
+        
+        // 調試：檢查每個項目的媒體資料
+        if (processedItem.imageUrl || processedItem.videoUrl) {
+          console.log("項目媒體資料:", {
+            title: processedItem.title,
+            原始image_url: i.image_url,
+            處理後imageUrl: processedItem.imageUrl,
+            原始video_url: i.video_url,
+            isYouTube: processedItem.isYouTube,
+            youtubeEmbedUrl: processedItem.youtubeEmbedUrl
+          });
+        }
+        
+        return processedItem;
+      });
+      
+      console.log("處理後的資料數量:", originalItems.length);
+      console.log("前3個項目:", originalItems.slice(0, 3));
+      
+      // 檢查有媒體檔案的項目數量
+      const itemsWithMedia = originalItems.filter(item => item.imageUrl || item.videoUrl);
+      console.log("有媒體檔案的項目數量:", itemsWithMedia.length);
+      
       return true;
     } catch (err) {
-      console.error(err);
-      showError("無法連線至伺服器");
+      console.error("API請求錯誤:", err);
+      if (err.name === 'TypeError' && err.message.includes('Failed to fetch')) {
+        showError("網路連線錯誤或CORS問題");
+      } else {
+        showError("無法連線至伺服器: " + err.message);
+      }
       return false;
     }
   }

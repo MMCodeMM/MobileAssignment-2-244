@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API測試</title>
+</head>
+<body>
+    <h1>API測試</h1>
+    <button onclick="testAPI()">測試API</button>
+    <div id="result"></div>
+
+    <script>
+        async function testAPI() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '測試中...';
+            
+            try {
+                const response = await fetch('https://dae-mobile-assignment.hkit.cc/api/exercises');
+                console.log('API回應狀態:', response.status);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+                
+                const data = await response.json();
+                console.log('API完整回應:', data);
+                
+                if (data.items && data.items.length > 0) {
+                    const firstItem = data.items[0];
+                    console.log('第一個項目:', firstItem);
+                    
+                    let html = `
+                        <h2>API測試成功</h2>
+                        <p>總項目數: ${data.items.length}</p>
+                        <h3>第一個項目:</h3>
+                        <ul>
+                            <li>標題: ${firstItem.title || '無'}</li>
+                            <li>圖片URL (image_url): ${firstItem.image_url || '無'}</li>
+                            <li>影片URL (video_url): ${firstItem.video_url || '無'}</li>
+                            <li>標籤: ${firstItem.tags ? firstItem.tags.join(', ') : '無'}</li>
+                        </ul>
+                    `;
+                    
+                    if (firstItem.image_url) {
+                        html += `<h3>測試圖片:</h3><img src="${firstItem.image_url}" style="max-width:300px;" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                        <div style="display:none; color:red;">圖片載入失敗</div>`;
+                    }
+                    
+                    if (firstItem.video_url) {
+                        const isYouTube = firstItem.video_url.includes('youtube.com') || firstItem.video_url.includes('youtu.be');
+                        html += `<h3>影片類型: ${isYouTube ? 'YouTube' : '普通影片'}</h3>`;
+                        html += `<p>影片URL: ${firstItem.video_url}</p>`;
+                        
+                        if (isYouTube) {
+                            const videoId = firstItem.video_url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]+)/);
+                            if (videoId) {
+                                const embedUrl = `https://www.youtube.com/embed/${videoId[1]}`;
+                                html += `<iframe src="${embedUrl}" width="320" height="180" frameborder="0" allowfullscreen></iframe>`;
+                            }
+                        }
+                    }
+                    
+                    resultDiv.innerHTML = html;
+                } else {
+                    resultDiv.innerHTML = '<h2>API回應但無資料</h2>';
+                }
+                
+            } catch (error) {
+                console.error('API測試錯誤:', error);
+                resultDiv.innerHTML = `<h2 style="color:red;">API測試失敗</h2><p>${error.message}</p>`;
+            }
+        }
+    </script>
+</body>
+</html>
