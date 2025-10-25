@@ -211,10 +211,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (!Array.isArray(filteredItems)) filteredItems = [];
 
+    // 處理空結果的顯示
+    const noResultsElement = document.getElementById("no-results");
+    const noFavoritesInView = document.getElementById("no-favorites-in-view");
+    
     if (filteredItems.length === 0) {
-      noResultsElement.style.display = "block";
+      if (window.showingFavoritesOnly) {
+        // 收藏視圖沒有結果
+        noResultsElement.style.display = "none";
+        if (noFavoritesInView) noFavoritesInView.style.display = "block";
+      } else {
+        // 普通視圖沒有結果
+        noResultsElement.style.display = "block";
+        if (noFavoritesInView) noFavoritesInView.style.display = "none";
+      }
     } else {
       noResultsElement.style.display = "none";
+      if (noFavoritesInView) noFavoritesInView.style.display = "none";
     }
 
     setCounts(originalItems.length, filteredItems.length);
@@ -345,6 +358,11 @@ document.addEventListener("DOMContentLoaded", () => {
           <div class="tag-container">${tagsContent}</div>
         </div>
         ${mediaContent}
+        <div class="card-actions">
+          <button class="favorite-btn" data-item-id="${item?.id || ''}" title="收藏">
+            <i class="far fa-heart"></i>
+          </button>
+        </div>
       `;
 
       // 綁定標籤點擊事件
@@ -385,7 +403,33 @@ document.addEventListener("DOMContentLoaded", () => {
         imageSection.title = '點擊放大圖片';
       }
 
+      // 綁定收藏按鈕事件
+      const favoriteBtn = card.querySelector('.favorite-btn');
+      if (favoriteBtn && window.favoritesManager) {
+        favoriteBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          
+          // 確保項目有 ID
+          if (!item.id) {
+            console.error('項目缺少 ID，無法收藏:', item);
+            if (window.favoritesManager.showToast) {
+              window.favoritesManager.showToast('此項目無法收藏（缺少識別碼）', 'error');
+            }
+            return;
+          }
+          
+          console.log('點擊收藏按鈕:', item.title, item.id);
+          window.favoritesManager.toggleFavorite(item);
+        });
+      }
+
       grid.appendChild(card);
+    }
+    
+    // 更新收藏按鈕狀態
+    if (window.favoritesManager) {
+      window.favoritesManager.updateFavoriteButtons();
     }
     
     console.log("渲染完成，顯示", filteredItems.length, "個項目");
@@ -399,9 +443,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const q = (searchbar?.value || "").toLowerCase().trim();
     const cat = categorySelect?.value || "";
 
-    console.log("套用篩選 - 搜尋詞:", q, "分類:", cat);
+    console.log("套用篩選 - 搜尋詞:", q, "分類:", cat, "收藏視圖:", window.showingFavoritesOnly);
 
-    const filtered = (originalItems || []).filter(it => {
+    let filtered = (originalItems || []).filter(it => {
       const matchesSearch =
         !q ||
         it.title?.toLowerCase().includes(q) ||
@@ -411,7 +455,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const matchesCategory = !cat || it.tags?.includes(cat) || it.level === cat;
 
-      return matchesSearch && matchesCategory;
+      // 收藏視圖篩選
+      let matchesFavorites = true;
+      if (window.showingFavoritesOnly && window.favoritesManager) {
+        matchesFavorites = window.favoritesManager.isFavorite(it.id);
+      }
+
+      return matchesSearch && matchesCategory && matchesFavorites;
     });
 
     // 更新篩選指示器
@@ -420,7 +470,7 @@ document.addEventListener("DOMContentLoaded", () => {
       activeFilterElement.style.display = "inline-flex";
       clearFilterBtn.style.display = "inline";
     } else {
-      activeFilterElement.textContent = "全部";
+      activeFilterElement.textContent = window.showingFavoritesOnly ? "收藏" : "全部";
       activeFilterElement.style.display = "inline-flex";
       clearFilterBtn.style.display = "none";
     }
@@ -496,6 +546,12 @@ document.addEventListener("DOMContentLoaded", () => {
         applyFilters();
       });
     }
+    
+    // 收藏視圖變化事件
+    window.addEventListener('favoritesViewChanged', () => {
+      console.log("收藏視圖已變化，重新套用篩選");
+      applyFilters();
+    });
     
     console.log("事件監聽器設置完成");
   }

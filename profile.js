@@ -18,6 +18,7 @@ class ProfileManager {
   initializeProfile() {
     this.loadProfileData();
     this.loadPreferences();
+    this.loadFavoritesStats();
   }
 
   // 載入用戶資料到表單
@@ -39,6 +40,43 @@ class ProfileManager {
 
     // 頭像
     this.updateAvatar();
+    
+    // 收藏統計
+    this.updateFavoritesCount();
+  }
+
+  // 載入收藏統計
+  loadFavoritesStats() {
+    if (!window.favoritesManager) {
+      window.favoritesManager = new FavoritesManager();
+    }
+    
+    const stats = window.favoritesManager.getFavoritesStats();
+    
+    // 更新統計數字
+    const totalFavorites = document.getElementById('total-favorites');
+    const recentFavorites = document.getElementById('recent-favorites');
+    const favoriteCategories = document.getElementById('favorite-categories');
+    
+    if (totalFavorites) totalFavorites.textContent = stats.total;
+    if (recentFavorites) recentFavorites.textContent = stats.recentlyAdded.length;
+    
+    // 計算不同類別數量
+    const uniqueCategories = new Set();
+    Object.keys(stats.byLevel).forEach(level => uniqueCategories.add(level));
+    Object.keys(stats.byTags).forEach(tag => uniqueCategories.add(tag));
+    
+    if (favoriteCategories) favoriteCategories.textContent = uniqueCategories.size;
+  }
+
+  // 更新收藏數量顯示
+  updateFavoritesCount() {
+    const favoritesCount = window.favoritesManager ? window.favoritesManager.getFavoritesCount() : 0;
+    const profileFavoritesCount = document.getElementById('profile-favorites-count');
+    
+    if (profileFavoritesCount) {
+      profileFavoritesCount.textContent = favoritesCount;
+    }
   }
 
   // 載入用戶偏好設定
@@ -425,6 +463,17 @@ function handleLogout() {
     const authSystem = new AuthSystem();
     authSystem.logout();
   }
+}
+
+function goToFavorites() {
+  window.location.href = 'favorites.html';
+}
+
+function exportFavoritesFromProfile() {
+  if (!window.favoritesManager) {
+    window.favoritesManager = new FavoritesManager();
+  }
+  window.favoritesManager.exportFavorites();
 }
 
 // 初始化資料管理系統

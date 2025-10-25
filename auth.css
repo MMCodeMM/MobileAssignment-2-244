@@ -564,3 +564,329 @@
     color: #4c8dff;
   }
 }
+
+/* 收藏頁面樣式 */
+.favorites-header {
+  background: var(--header-bg, #e0dfd9);
+  border-bottom: 1px solid var(--border-color, #c5c5c5);
+  padding: 16px;
+}
+
+.favorites-stats {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  margin-bottom: 16px;
+}
+
+.stat-item {
+  text-align: center;
+  min-width: 80px;
+}
+
+.stat-number {
+  display: block;
+  font-size: 24px;
+  font-weight: bold;
+  color: var(--accent, #0078d7);
+  margin-bottom: 4px;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.favorites-filters {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.favorites-filters ion-select {
+  flex: 1;
+  max-width: 200px;
+}
+
+/* 選單選項樣式 */
+.menu-options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.menu-option {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  background: #f8f9fa;
+  border: 1px solid #e1e5e9;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+  width: 100%;
+}
+
+.menu-option:hover {
+  background: #e9ecef;
+  border-color: var(--accent, #0078d7);
+}
+
+.menu-option.danger {
+  border-color: #dc3545;
+  color: #dc3545;
+}
+
+.menu-option.danger:hover {
+  background: #f8d7da;
+  border-color: #dc3545;
+}
+
+.menu-option i {
+  font-size: 18px;
+  color: var(--accent, #0078d7);
+  min-width: 18px;
+}
+
+.menu-option.danger i {
+  color: #dc3545;
+}
+
+.menu-option div {
+  flex: 1;
+}
+
+.menu-option strong {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 16px;
+}
+
+.menu-option p {
+  margin: 0;
+  font-size: 14px;
+  color: #666;
+  line-height: 1.4;
+}
+
+/* 排序選項樣式 */
+.sort-options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sort-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: #f8f9fa;
+  border: 1px solid #e1e5e9;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;
+  text-align: left;
+}
+
+.sort-option:hover {
+  background: var(--accent, #0078d7);
+  color: white;
+  border-color: var(--accent, #0078d7);
+}
+
+.sort-option i {
+  font-size: 16px;
+  color: var(--accent, #0078d7);
+  min-width: 16px;
+}
+
+.sort-option:hover i {
+  color: white;
+}
+
+.sort-option span {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* 統計資訊樣式 */
+.stats-section {
+  margin-bottom: 24px;
+  padding: 16px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e1e5e9;
+}
+
+.stats-section h4 {
+  margin: 0 0 12px 0;
+  color: var(--accent, #0078d7);
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.stats-section p {
+  margin: 8px 0;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.stats-section strong {
+  color: #333;
+}
+
+/* 收藏按鈕狀態 */
+ion-badge.favorites-count {
+  position: absolute;
+  top: -2px;
+  right: -6px;
+  font-size: 10px;
+  min-width: 16px;
+  height: 16px;
+  border-radius: 8px;
+}
+
+/* 響應式設計 - 收藏頁面 */
+@media (max-width: 768px) {
+  .favorites-header {
+    padding: 12px;
+  }
+  
+  .favorites-stats {
+    gap: 20px;
+  }
+  
+  .stat-number {
+    font-size: 20px;
+  }
+  
+  .favorites-filters {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+  
+  .favorites-filters ion-select {
+    max-width: none;
+  }
+  
+  .menu-option {
+    padding: 12px;
+  }
+  
+  .menu-option strong {
+    font-size: 14px;
+  }
+  
+  .menu-option p {
+    font-size: 12px;
+  }
+}
+
+/* 深色模式 - 收藏頁面 */
+@media (prefers-color-scheme: dark) {
+  .favorites-header {
+    background: #1e1e1e;
+    border-bottom-color: #333;
+  }
+  
+  .stat-number {
+    color: #4c8dff;
+  }
+  
+  .stat-label {
+    color: #ccc;
+  }
+  
+  .menu-option,
+  .sort-option,
+  .stats-section {
+    background: #2a2a2a;
+    border-color: #444;
+    color: #fff;
+  }
+  
+  .menu-option:hover,
+  .sort-option:hover {
+    background: #4c8dff;
+  }
+  
+  .menu-option.danger {
+    border-color: #e74c3c;
+    color: #e74c3c;
+  }
+  
+  .menu-option.danger:hover {
+    background: #5a1a1a;
+  }
+  
+  .menu-option p {
+    color: #ccc;
+  }
+  
+  .stats-section h4 {
+    color: #4c8dff;
+  }
+  
+  .stats-section strong {
+    color: #fff;
+  }
+}
+
+/* 收藏摘要樣式 */
+.favorites-summary {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 20px;
+  padding: 16px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e1e5e9;
+}
+
+.summary-item {
+  text-align: center;
+  flex: 1;
+}
+
+.summary-item strong {
+  display: block;
+  font-size: 24px;
+  font-weight: bold;
+  color: var(--accent, #0078d7);
+  margin-bottom: 4px;
+}
+
+.summary-item span {
+  font-size: 12px;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.favorites-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* 響應式 - 收藏摘要 */
+@media (max-width: 480px) {
+  .favorites-summary {
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .summary-item strong {
+    font-size: 20px;
+  }
+}

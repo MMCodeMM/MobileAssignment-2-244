@@ -695,3 +695,97 @@
         height: 220px;
       }
     }
+
+    /* ===== 收藏功能樣式 ===== */
+    #toggle-favorites {
+      --background: #f8f8f8;
+      --color: #666;
+      border: 1px solid var(--border-color);
+      border-radius: 2px;
+      box-shadow: 1px 1px 0 #fff inset, -1px -1px 0 #aaa inset;
+      transition: all 0.2s ease;
+    }
+
+    #toggle-favorites:hover {
+      --background: #e0e0e0;
+      --color: #333;
+    }
+
+    #toggle-favorites[style*="color: rgb(231, 76, 60)"] {
+      --background: #ffeaea;
+      --color: #e74c3c;
+      border-color: #e74c3c;
+    }
+
+    #toggle-favorites[style*="color: rgb(231, 76, 60)"]:hover {
+      --background: #ffcccc;
+    }
+
+    /* 收藏數量徽章 */
+    ion-badge.favorites-count {
+      --background: #e74c3c;
+      --color: white;
+      font-size: 10px;
+      min-width: 16px;
+      height: 16px;
+      border-radius: 8px;
+      position: absolute;
+      top: -2px;
+      right: -6px;
+    }
+
+    /* 視圖模式指示器 */
+    #view-mode-indicator {
+      font-weight: 500;
+    }
+
+    #view-mode-indicator #current-view-mode {
+      color: var(--accent);
+      font-weight: bold;
+    }
+
+    /* 收藏按鈕動畫增強 */
+    .favorite-btn {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .favorite-btn::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      background: rgba(231, 76, 60, 0.3);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      transition: all 0.3s ease;
+    }
+
+    .favorite-btn:hover::before {
+      width: 40px;
+      height: 40px;
+    }
+
+    .favorite-btn.favorited::before {
+      background: rgba(231, 76, 60, 0.2);
+      width: 40px;
+      height: 40px;
+    }
+
+    /* 響應式調整 - 收藏功能 */
+    @media (max-width: 768px) {
+      .category-header {
+        gap: 8px;
+      }
+      
+      #toggle-favorites {
+        font-size: 12px;
+        padding: 6px 8px;
+      }
+      
+      #toggle-favorites i {
+        font-size: 10px;
+      }
+    }

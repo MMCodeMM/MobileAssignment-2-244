@@ -16,6 +16,10 @@
       <ion-toolbar>
         <ion-title>MAX教學運動平台</ion-title>
         <ion-buttons slot="end">
+          <ion-button id="favorites-button" onclick="goToFavorites()" style="display: none;">
+            <i class="fas fa-heart"></i>
+            <ion-badge class="favorites-count" color="danger">0</ion-badge>
+          </ion-button>
           <ion-button id="auth-button" onclick="handleAuthButton()">
             <i class="fas fa-user"></i>
           </ion-button>
@@ -34,6 +38,10 @@
         <ion-button id="reset-category" fill="clear">
           <i class="fas fa-undo"></i>
           重設篩選
+        </ion-button>
+        <ion-button id="toggle-favorites" fill="clear" style="display: none;" onclick="toggleFavoritesView()">
+          <i class="fas fa-heart" id="favorites-toggle-icon"></i>
+          <span id="favorites-toggle-text">顯示收藏</span>
         </ion-button>
       </div>
 
@@ -56,6 +64,14 @@
           <i class="fas fa-user-check"></i>
           歡迎, <span id="user-display-name"></span>
         </div>
+        <div class="stats-item" id="favorites-stats" style="display: none;">
+          <i class="fas fa-heart"></i>
+          已收藏: <span class="favorites-count">0</span> 個項目
+        </div>
+        <div class="stats-item" id="view-mode-indicator" style="display: none;">
+          <i class="fas fa-eye"></i>
+          目前檢視: <span id="current-view-mode">全部項目</span>
+        </div>
       </div>
     </ion-header>
 
@@ -68,6 +84,16 @@
             <i class="fas fa-dumbbell"></i>
             <h3>沒有找到相關項目</h3>
             <p>請嘗試其他搜尋詞或重設篩選條件</p>
+          </div>
+
+          <div id="no-favorites-in-view" class="no-results" style="display: none;">
+            <i class="fas fa-heart-broken"></i>
+            <h3>目前沒有收藏的項目符合篩選條件</h3>
+            <p>請調整搜尋條件或收藏更多項目</p>
+            <ion-button onclick="toggleFavoritesView()" class="auth-button">
+              <i class="fas fa-list"></i>
+              顯示全部項目
+            </ion-button>
           </div>
         </div>
       </div>
@@ -106,6 +132,8 @@
   </ion-app>
 
   <script type="module" src="/data/trainingData.js"></script>
+  <script src="auth.js"></script>
+  <script src="favorites.js"></script>
   <script>
   //let token = '123456'
 
@@ -145,28 +173,52 @@
       checkAuthStatus() {
         const authButton = document.getElementById('auth-button');
         const logoutButton = document.getElementById('logout-button');
+        const favoritesButton = document.getElementById('favorites-button');
+        const toggleFavoritesBtn = document.getElementById('toggle-favorites');
         const userWelcome = document.getElementById('user-welcome');
+        const favoritesStats = document.getElementById('favorites-stats');
+        const viewModeIndicator = document.getElementById('view-mode-indicator');
         const userDisplayName = document.getElementById('user-display-name');
 
         if (this.currentUser) {
           // 用戶已登入
           authButton.style.display = 'none';
           logoutButton.style.display = 'block';
+          favoritesButton.style.display = 'block';
+          toggleFavoritesBtn.style.display = 'block';
           userWelcome.style.display = 'block';
+          favoritesStats.style.display = 'block';
+          viewModeIndicator.style.display = 'block';
           userDisplayName.textContent = this.currentUser.profile.displayName;
           
           // 更新按鈕文字和圖標
           authButton.innerHTML = '<i class="fas fa-user-circle"></i>';
           authButton.setAttribute('title', '用戶資料');
+          
+          // 初始化收藏管理器
+          if (!window.favoritesManager) {
+            window.favoritesManager = new FavoritesManager();
+          }
+          
+          // 初始化收藏視圖狀態
+          window.showingFavoritesOnly = false;
         } else {
           // 用戶未登入
           authButton.style.display = 'block';
           logoutButton.style.display = 'none';
+          favoritesButton.style.display = 'none';
+          toggleFavoritesBtn.style.display = 'none';
           userWelcome.style.display = 'none';
+          favoritesStats.style.display = 'none';
+          viewModeIndicator.style.display = 'none';
           
           // 更新按鈕文字和圖標
           authButton.innerHTML = '<i class="fas fa-sign-in-alt"></i>';
           authButton.setAttribute('title', '登入/註冊');
+          
+          // 清除收藏管理器
+          window.favoritesManager = null;
+          window.showingFavoritesOnly = false;
         }
       }
 
@@ -236,6 +288,56 @@
     // 顯示用戶設定
     function showUserSettings() {
       window.location.href = 'profile.html';
+    }
+
+    // 跳轉到收藏頁面
+    function goToFavorites() {
+      window.location.href = 'favorites.html';
+    }
+
+    // 切換收藏視圖
+    function toggleFavoritesView() {
+      if (!window.favoritesManager) {
+        alert('請先登入以使用收藏功能');
+        return;
+      }
+
+      window.showingFavoritesOnly = !window.showingFavoritesOnly;
+      
+      const toggleBtn = document.getElementById('toggle-favorites');
+      const toggleIcon = document.getElementById('favorites-toggle-icon');
+      const toggleText = document.getElementById('favorites-toggle-text');
+      const viewModeSpan = document.getElementById('current-view-mode');
+      
+      if (window.showingFavoritesOnly) {
+        // 切換到收藏視圖
+        toggleIcon.className = 'fas fa-list';
+        toggleText.textContent = '顯示全部';
+        viewModeSpan.textContent = '收藏項目';
+        toggleBtn.style.color = '#e74c3c';
+      } else {
+        // 切換到全部視圖
+        toggleIcon.className = 'fas fa-heart';
+        toggleText.textContent = '顯示收藏';
+        viewModeSpan.textContent = '全部項目';
+        toggleBtn.style.color = '';
+      }
+      
+      // 觸發重新篩選
+      if (typeof applyFilters === 'function') {
+        // 等待 DOM 更新後再執行
+        setTimeout(() => {
+          window.dispatchEvent(new Event('favoritesViewChanged'));
+        }, 100);
+      }
+      
+      // 顯示切換提示
+      const message = window.showingFavoritesOnly ? 
+        '已切換到收藏視圖' : '已切換到全部項目視圖';
+      
+      if (window.favoritesManager && window.favoritesManager.showToast) {
+        window.favoritesManager.showToast(message, 'success');
+      }
     }
 
     // 頁面載入完成後初始化認證系統
