@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>用戶資料 - MAX教學運動平台</title>
+  <script type="module" src="https://cdn.jsdelivr.net/npm/@ionic/core/dist/ionic/ionic.esm.js"></script>
+  <script nomodule src="https://cdn.jsdelivr.net/npm/@ionic/core/dist/ionic/ionic.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@ionic/core/css/ionic.bundle.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="auth.css">
+</head>
+<body>
+  <ion-app>
+    <ion-header>
+      <ion-toolbar>
+        <ion-buttons slot="start">
+          <ion-button onclick="goToHome()">
+            <i class="fas fa-arrow-left"></i>
+          </ion-button>
+        </ion-buttons>
+        <ion-title>用戶資料</ion-title>
+        <ion-buttons slot="end">
+          <ion-button onclick="handleLogout()">
+            <i class="fas fa-sign-out-alt"></i>
+          </ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content>
+      <div class="profile-container">
+        
+        <!-- 用戶資料卡片 -->
+        <div class="profile-card">
+          <div class="profile-header">
+            <div class="profile-avatar">
+              <img id="user-avatar" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiByeD0iNTAiIGZpbGw9IiMzODgwZmYiLz4KPHRleHQgeD0iNTAiIHk9IjU1IiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMzAiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5VPC90ZXh0Pgo8L3N2Zz4K" alt="用戶頭像">
+              <button class="avatar-upload-btn" onclick="uploadAvatar()">
+                <i class="fas fa-camera"></i>
+              </button>
+            </div>
+            <div class="profile-info">
+              <h2 id="profile-display-name">載入中...</h2>
+              <p id="profile-username">@載入中</p>
+              <div class="profile-stats">
+                <span><i class="fas fa-calendar"></i> 加入於 <span id="profile-join-date">載入中</span></span>
+                <span><i class="fas fa-clock"></i> 最後登入 <span id="profile-last-login">載入中</span></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 個人資訊編輯 -->
+        <div class="profile-section">
+          <h3><i class="fas fa-user-edit"></i> 個人資訊</h3>
+          <form id="profile-form">
+            <ion-item>
+              <ion-input 
+                label="顯示名稱" 
+                label-placement="floating" 
+                fill="outline"
+                id="edit-display-name"
+                type="text"
+                maxlength="30"
+                placeholder="請輸入顯示名稱"
+              ></ion-input>
+            </ion-item>
+
+            <ion-item>
+              <ion-input 
+                label="電子郵件" 
+                label-placement="floating" 
+                fill="outline"
+                id="edit-email"
+                type="email"
+                readonly
+                placeholder="電子郵件"
+              ></ion-input>
+            </ion-item>
+
+            <ion-item>
+              <ion-input 
+                label="手機號碼" 
+                label-placement="floating" 
+                fill="outline"
+                id="edit-phone"
+                type="tel"
+                placeholder="請輸入手機號碼"
+              ></ion-input>
+            </ion-item>
+
+            <ion-item>
+              <ion-textarea 
+                label="個人簡介" 
+                label-placement="floating" 
+                fill="outline"
+                id="edit-bio"
+                rows="3"
+                maxlength="200"
+                placeholder="介紹一下自己..."
+              ></ion-textarea>
+            </ion-item>
+
+            <ion-button 
+              expand="full" 
+              type="submit" 
+              id="save-profile-btn"
+              class="auth-button"
+            >
+              <i class="fas fa-save"></i>
+              儲存變更
+            </ion-button>
+          </form>
+        </div>
+
+        <!-- 偏好設定 -->
+        <div class="profile-section">
+          <h3><i class="fas fa-cog"></i> 偏好設定</h3>
+          
+          <ion-item>
+            <ion-checkbox id="notifications-enabled"></ion-checkbox>
+            <ion-label>
+              <h2>推播通知</h2>
+              <p>接收新運動課程和更新通知</p>
+            </ion-label>
+          </ion-item>
+
+          <ion-item>
+            <ion-checkbox id="newsletter-enabled"></ion-checkbox>
+            <ion-label>
+              <h2>電子報訂閱</h2>
+              <p>接收健身技巧和平台最新消息</p>
+            </ion-label>
+          </ion-item>
+
+          <ion-item>
+            <ion-select id="theme-select" label="主題模式" interface="popover">
+              <ion-select-option value="auto">自動</ion-select-option>
+              <ion-select-option value="light">淺色</ion-select-option>
+              <ion-select-option value="dark">深色</ion-select-option>
+            </ion-select>
+          </ion-item>
+
+          <ion-button 
+            expand="full" 
+            id="save-preferences-btn"
+            class="auth-button"
+            fill="outline"
+          >
+            <i class="fas fa-save"></i>
+            儲存偏好設定
+          </ion-button>
+        </div>
+
+        <!-- 安全設定 -->
+        <div class="profile-section">
+          <h3><i class="fas fa-shield-alt"></i> 安全設定</h3>
+          
+          <ion-button 
+            expand="full" 
+            id="change-password-btn"
+            color="medium"
+            fill="outline"
+            onclick="showChangePassword()"
+          >
+            <i class="fas fa-key"></i>
+            變更密碼
+          </ion-button>
+
+          <ion-button 
+            expand="full" 
+            id="delete-account-btn"
+            color="danger"
+            fill="outline"
+            onclick="showDeleteAccount()"
+          >
+            <i class="fas fa-user-times"></i>
+            刪除帳戶
+          </ion-button>
+        </div>
+
+        <!-- 變更密碼表單 -->
+        <div id="change-password-section" class="profile-section" style="display: none;">
+          <h3><i class="fas fa-key"></i> 變更密碼</h3>
+          <form id="change-password-form">
+            <ion-item>
+              <ion-input 
+                label="目前密碼" 
+                label-placement="floating" 
+                fill="outline"
+                id="current-password"
+                type="password"
+                required
+                placeholder="請輸入目前密碼"
+              ></ion-input>
+            </ion-item>
+
+            <ion-item>
+              <ion-input 
+                label="新密碼" 
+                label-placement="floating" 
+                fill="outline"
+                id="new-password"
+                type="password"
+                required
+                minlength="6"
+                placeholder="請輸入新密碼（至少6位）"
+              ></ion-input>
+            </ion-item>
+
+            <ion-item>
+              <ion-input 
+                label="確認新密碼" 
+                label-placement="floating" 
+                fill="outline"
+                id="confirm-new-password"
+                type="password"
+                required
+                placeholder="請再次輸入新密碼"
+              ></ion-input>
+            </ion-item>
+
+            <div class="form-actions">
+              <ion-button 
+                type="submit" 
+                id="submit-password-btn"
+                class="auth-button"
+              >
+                <i class="fas fa-check"></i>
+                確認變更
+              </ion-button>
+              <ion-button 
+                type="button" 
+                fill="outline"
+                color="medium"
+                onclick="hideChangePassword()"
+              >
+                <i class="fas fa-times"></i>
+                取消
+              </ion-button>
+            </div>
+          </form>
+        </div>
+
+      </div>
+    </ion-content>
+
+    <!-- Toast 訊息容器 -->
+    <div id="toast-container"></div>
+
+  </ion-app>
+
+  <script src="auth.js"></script>
+  <script src="profile.js"></script>
+</body>
+</html>

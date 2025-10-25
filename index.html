@@ -15,6 +15,14 @@
     <ion-header>
       <ion-toolbar>
         <ion-title>MAX教學運動平台</ion-title>
+        <ion-buttons slot="end">
+          <ion-button id="auth-button" onclick="handleAuthButton()">
+            <i class="fas fa-user"></i>
+          </ion-button>
+          <ion-button id="logout-button" onclick="handleLogout()" style="display: none;">
+            <i class="fas fa-sign-out-alt"></i>
+          </ion-button>
+        </ion-buttons>
       </ion-toolbar>
 
       <ion-searchbar id="search-bar" placeholder="搜尋..."></ion-searchbar>
@@ -43,6 +51,10 @@
           當前分類: 
           <span id="active-filter" class="filter-indicator">全部</span>
           <i class="fas fa-times-circle" id="clear-filter" style="cursor:pointer; margin-left: 4px;" title="清除分類篩選"></i>
+        </div>
+        <div class="stats-item" id="user-welcome" style="display: none;">
+          <i class="fas fa-user-check"></i>
+          歡迎, <span id="user-display-name"></span>
         </div>
       </div>
     </ion-header>
@@ -98,6 +110,138 @@
   //let token = '123456'
 
     //headers: { Authorization: `Bearer ${token}` },
+
+    // 認證系統集成
+    class MainPageAuth {
+      constructor() {
+        this.authSystem = null;
+        this.init();
+      }
+
+      init() {
+        // 載入認證系統
+        this.loadAuthSystem();
+        // 檢查登入狀態
+        this.checkAuthStatus();
+      }
+
+      loadAuthSystem() {
+        // 簡化版的認證檢查，不依賴完整的 AuthSystem 類
+        this.currentUser = this.loadCurrentUser();
+      }
+
+      loadCurrentUser() {
+        // 優先從 localStorage 載入（記住我功能）
+        let user = localStorage.getItem('maxSports_currentUser');
+        if (user && localStorage.getItem('maxSports_rememberMe')) {
+          return JSON.parse(user);
+        }
+        
+        // 從 sessionStorage 載入
+        user = sessionStorage.getItem('maxSports_currentUser');
+        return user ? JSON.parse(user) : null;
+      }
+
+      checkAuthStatus() {
+        const authButton = document.getElementById('auth-button');
+        const logoutButton = document.getElementById('logout-button');
+        const userWelcome = document.getElementById('user-welcome');
+        const userDisplayName = document.getElementById('user-display-name');
+
+        if (this.currentUser) {
+          // 用戶已登入
+          authButton.style.display = 'none';
+          logoutButton.style.display = 'block';
+          userWelcome.style.display = 'block';
+          userDisplayName.textContent = this.currentUser.profile.displayName;
+          
+          // 更新按鈕文字和圖標
+          authButton.innerHTML = '<i class="fas fa-user-circle"></i>';
+          authButton.setAttribute('title', '用戶資料');
+        } else {
+          // 用戶未登入
+          authButton.style.display = 'block';
+          logoutButton.style.display = 'none';
+          userWelcome.style.display = 'none';
+          
+          // 更新按鈕文字和圖標
+          authButton.innerHTML = '<i class="fas fa-sign-in-alt"></i>';
+          authButton.setAttribute('title', '登入/註冊');
+        }
+      }
+
+      isLoggedIn() {
+        return this.currentUser !== null;
+      }
+
+      getCurrentUser() {
+        return this.currentUser;
+      }
+    }
+
+    // 認證按鈕處理函數
+    function handleAuthButton() {
+      if (window.mainPageAuth && window.mainPageAuth.isLoggedIn()) {
+        // 已登入，顯示用戶資料或選單
+        showUserMenu();
+      } else {
+        // 未登入，跳轉到登入頁面
+        window.location.href = 'auth.html?action=login';
+      }
+    }
+
+    // 登出處理函數
+    function handleLogout() {
+      if (confirm('確定要登出嗎？')) {
+        // 清除認證數據
+        localStorage.removeItem('maxSports_currentUser');
+        sessionStorage.removeItem('maxSports_currentUser');
+        localStorage.removeItem('maxSports_rememberMe');
+        
+        // 重新載入頁面
+        window.location.reload();
+      }
+    }
+
+    // 顯示用戶選單（簡化版）
+    function showUserMenu() {
+      const user = window.mainPageAuth.getCurrentUser();
+      const options = [
+        '用戶資料',
+        '設定',
+        '登出'
+      ];
+      
+      // 使用 confirm 作為簡單的選單
+      const choice = prompt(`歡迎 ${user.profile.displayName}!\n\n選擇功能:\n1. 用戶資料\n2. 設定\n3. 登出\n\n請輸入數字 (1-3):`);
+      
+      switch(choice) {
+        case '1':
+          window.location.href = 'profile.html';
+          break;
+        case '2':
+          showUserSettings();
+          break;
+        case '3':
+          handleLogout();
+          break;
+      }
+    }
+
+    // 顯示用戶資料
+    function showUserProfile() {
+      window.location.href = 'profile.html';
+    }
+
+    // 顯示用戶設定
+    function showUserSettings() {
+      window.location.href = 'profile.html';
+    }
+
+    // 頁面載入完成後初始化認證系統
+    document.addEventListener('DOMContentLoaded', () => {
+      window.mainPageAuth = new MainPageAuth();
+    });
 
   </script>
 </body>

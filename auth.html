@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>用戶認證 - MAX教學運動平台</title>
+  <script type="module" src="https://cdn.jsdelivr.net/npm/@ionic/core/dist/ionic/ionic.esm.js"></script>
+  <script nomodule src="https://cdn.jsdelivr.net/npm/@ionic/core/dist/ionic/ionic.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@ionic/core/css/ionic.bundle.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="auth.css">
+</head>
+<body>
+  <ion-app>
+    <ion-header>
+      <ion-toolbar>
+        <ion-buttons slot="start">
+          <ion-button onclick="goToHome()">
+            <i class="fas fa-arrow-left"></i>
+          </ion-button>
+        </ion-buttons>
+        <ion-title>用戶認證</ion-title>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content>
+      <div class="auth-container">
+        
+        <!-- 註冊表單 -->
+        <div id="register-form" class="auth-form">
+          <div class="auth-header">
+            <h2>註冊新帳戶</h2>
+            <p>加入MAX運動教學平台</p>
+          </div>
+
+          <form id="registration-form">
+            <ion-item>
+              <ion-input 
+                label="用戶名稱" 
+                label-placement="floating" 
+                fill="outline"
+                id="register-username"
+                type="text"
+                required
+                maxlength="20"
+                minlength="3"
+                placeholder="請輸入用戶名稱"
+              ></ion-input>
+            </ion-item>
+
+            <ion-item>
+              <ion-input 
+                label="電子郵件" 
+                label-placement="floating" 
+                fill="outline"
+                id="register-email"
+                type="email"
+                required
+                placeholder="請輸入電子郵件"
+              ></ion-input>
+            </ion-item>
+
+            <ion-item>
+              <ion-input 
+                label="密碼" 
+                label-placement="floating" 
+                fill="outline"
+                id="register-password"
+                type="password"
+                required
+                minlength="6"
+                placeholder="請輸入密碼（至少6位）"
+              ></ion-input>
+            </ion-item>
+
+            <ion-item>
+              <ion-input 
+                label="確認密碼" 
+                label-placement="floating" 
+                fill="outline"
+                id="register-confirm-password"
+                type="password"
+                required
+                placeholder="請再次輸入密碼"
+              ></ion-input>
+            </ion-item>
+
+            <ion-item>
+              <ion-input 
+                label="手機號碼" 
+                label-placement="floating" 
+                fill="outline"
+                id="register-phone"
+                type="tel"
+                placeholder="請輸入手機號碼（選填）"
+              ></ion-input>
+            </ion-item>
+
+            <ion-item>
+              <ion-checkbox id="terms-checkbox"></ion-checkbox>
+              <ion-label class="terms-label">
+                我同意 <a href="#" onclick="showTerms()">服務條款</a> 和 <a href="#" onclick="showPrivacy()">隱私政策</a>
+              </ion-label>
+            </ion-item>
+
+            <ion-button 
+              expand="full" 
+              type="submit" 
+              id="register-btn"
+              class="auth-button"
+            >
+              <i class="fas fa-user-plus"></i>
+              註冊帳戶
+            </ion-button>
+          </form>
+
+          <div class="auth-switch">
+            <p>已有帳戶？ <a href="#" onclick="showLogin()">立即登入</a></p>
+          </div>
+        </div>
+
+        <!-- 登入表單 -->
+        <div id="login-form" class="auth-form" style="display: none;">
+          <div class="auth-header">
+            <h2>登入帳戶</h2>
+            <p>歡迎回到MAX運動教學平台</p>
+          </div>
+
+          <form id="login-form-element">
+            <ion-item>
+              <ion-input 
+                label="電子郵件或用戶名稱" 
+                label-placement="floating" 
+                fill="outline"
+                id="login-username"
+                type="text"
+                required
+                placeholder="請輸入電子郵件或用戶名稱"
+              ></ion-input>
+            </ion-item>
+
+            <ion-item>
+              <ion-input 
+                label="密碼" 
+                label-placement="floating" 
+                fill="outline"
+                id="login-password"
+                type="password"
+                required
+                placeholder="請輸入密碼"
+              ></ion-input>
+            </ion-item>
+
+            <ion-item>
+              <ion-checkbox id="remember-checkbox"></ion-checkbox>
+              <ion-label>記住我</ion-label>
+            </ion-item>
+
+            <ion-button 
+              expand="full" 
+              type="submit" 
+              id="login-btn"
+              class="auth-button"
+            >
+              <i class="fas fa-sign-in-alt"></i>
+              登入
+            </ion-button>
+          </form>
+
+          <div class="auth-links">
+            <a href="#" onclick="showForgotPassword()">忘記密碼？</a>
+          </div>
+
+          <div class="auth-switch">
+            <p>還沒有帳戶？ <a href="#" onclick="showRegister()">立即註冊</a></p>
+          </div>
+        </div>
+
+        <!-- 忘記密碼表單 -->
+        <div id="forgot-password-form" class="auth-form" style="display: none;">
+          <div class="auth-header">
+            <h2>重設密碼</h2>
+            <p>輸入您的電子郵件地址，我們將發送重設密碼的連結</p>
+          </div>
+
+          <form id="forgot-password-form-element">
+            <ion-item>
+              <ion-input 
+                label="電子郵件" 
+                label-placement="floating" 
+                fill="outline"
+                id="forgot-email"
+                type="email"
+                required
+                placeholder="請輸入註冊時的電子郵件"
+              ></ion-input>
+            </ion-item>
+
+            <ion-button 
+              expand="full" 
+              type="submit" 
+              id="forgot-btn"
+              class="auth-button"
+            >
+              <i class="fas fa-paper-plane"></i>
+              發送重設連結
+            </ion-button>
+          </form>
+
+          <div class="auth-switch">
+            <p><a href="#" onclick="showLogin()">返回登入</a></p>
+          </div>
+        </div>
+
+      </div>
+    </ion-content>
+
+    <!-- 成功/錯誤訊息提示 -->
+    <div id="toast-container"></div>
+
+    <!-- 條款和隱私政策模態 -->
+    <div id="terms-modal" class="auth-modal" style="display: none;">
+      <div class="modal-backdrop" onclick="closeModal('terms-modal')"></div>
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>服務條款</h3>
+          <button class="modal-close" onclick="closeModal('terms-modal')">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+          <h4>1. 服務說明</h4>
+          <p>MAX教學運動平台提供運動教學和健身指導服務。</p>
+          
+          <h4>2. 用戶責任</h4>
+          <p>用戶需提供真實、準確的註冊資訊，並保護好自己的帳戶安全。</p>
+          
+          <h4>3. 隱私保護</h4>
+          <p>我們承諾保護用戶隱私，不會洩露個人資料給第三方。</p>
+          
+          <h4>4. 服務變更</h4>
+          <p>平台保留隨時修改或終止服務的權利。</p>
+        </div>
+      </div>
+    </div>
+
+    <div id="privacy-modal" class="auth-modal" style="display: none;">
+      <div class="modal-backdrop" onclick="closeModal('privacy-modal')"></div>
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>隱私政策</h3>
+          <button class="modal-close" onclick="closeModal('privacy-modal')">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+          <h4>資料收集</h4>
+          <p>我們只收集必要的用戶資料，包括用戶名稱、電子郵件等基本資訊。</p>
+          
+          <h4>資料使用</h4>
+          <p>收集的資料僅用於提供服務、帳戶管理和改善用戶體驗。</p>
+          
+          <h4>資料保護</h4>
+          <p>我們採用業界標準的安全措施保護用戶資料。</p>
+          
+          <h4>資料共享</h4>
+          <p>未經用戶同意，我們不會與第三方共享個人資料。</p>
+        </div>
+      </div>
+    </div>
+
+  </ion-app>
+
+  <script src="auth.js"></script>
+</body>
+</html>

@@ -1,0 +1,566 @@
+/* 認證頁面樣式 */
+.auth-container {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+  min-height: calc(100vh - 120px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.auth-form {
+  width: 100%;
+  background: white;
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e1e5e9;
+}
+
+.auth-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.auth-header h2 {
+  color: #3880ff;
+  margin: 0 0 8px 0;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.auth-header p {
+  color: #666;
+  margin: 0;
+  font-size: 14px;
+}
+
+.auth-form ion-item {
+  margin-bottom: 16px;
+  --border-radius: 8px;
+  --border-color: #d7dbe0;
+  --highlight-color: #3880ff;
+}
+
+.auth-form ion-input {
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --padding-top: 12px;
+  --padding-bottom: 12px;
+}
+
+.auth-button {
+  margin-top: 20px;
+  --border-radius: 8px;
+  height: 48px;
+  font-weight: 500;
+  --background: linear-gradient(135deg, #3880ff 0%, #3dc2ff 100%);
+}
+
+.auth-button i {
+  margin-right: 8px;
+}
+
+.auth-switch {
+  text-align: center;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #e1e5e9;
+}
+
+.auth-switch p {
+  margin: 0;
+  color: #666;
+  font-size: 14px;
+}
+
+.auth-switch a {
+  color: #3880ff;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.auth-switch a:hover {
+  text-decoration: underline;
+}
+
+.auth-links {
+  text-align: center;
+  margin-top: 16px;
+}
+
+.auth-links a {
+  color: #3880ff;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.auth-links a:hover {
+  text-decoration: underline;
+}
+
+.terms-label {
+  margin-left: 12px;
+  font-size: 14px;
+  color: #666;
+}
+
+.terms-label a {
+  color: #3880ff;
+  text-decoration: none;
+}
+
+.terms-label a:hover {
+  text-decoration: underline;
+}
+
+/* 表單動畫 */
+.auth-form {
+  animation: slideInUp 0.3s ease-out;
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Toast 訊息樣式 */
+.toast {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 12px 20px;
+  border-radius: 8px;
+  color: white;
+  font-weight: 500;
+  z-index: 10000;
+  animation: toastSlideIn 0.3s ease-out;
+}
+
+.toast.success {
+  background: linear-gradient(135deg, #2dd36f 0%, #37d399 100%);
+}
+
+.toast.error {
+  background: linear-gradient(135deg, #eb445a 0%, #f25454 100%);
+}
+
+.toast.warning {
+  background: linear-gradient(135deg, #ffc409 0%, #ffca2c 100%);
+  color: #333;
+}
+
+@keyframes toastSlideIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 100%);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+/* 模態框樣式 */
+.auth-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.auth-modal .modal-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+}
+
+.auth-modal .modal-content {
+  position: relative;
+  background: white;
+  border-radius: 12px;
+  max-width: 500px;
+  width: 90%;
+  max-height: 80vh;
+  overflow: hidden;
+  animation: modalSlideIn 0.3s ease-out;
+}
+
+.auth-modal .modal-header {
+  padding: 20px;
+  border-bottom: 1px solid #e1e5e9;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.auth-modal .modal-header h3 {
+  margin: 0;
+  color: #3880ff;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.auth-modal .modal-close {
+  background: none;
+  border: none;
+  font-size: 18px;
+  color: #666;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.auth-modal .modal-close:hover {
+  background: #f4f5f8;
+  color: #333;
+}
+
+.auth-modal .modal-body {
+  padding: 20px;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.auth-modal .modal-body h4 {
+  color: #333;
+  margin: 16px 0 8px 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.auth-modal .modal-body p {
+  color: #666;
+  line-height: 1.5;
+  margin: 0 0 12px 0;
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* 載入動畫 */
+.loading-spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid #ffffff40;
+  border-radius: 50%;
+  border-top-color: #ffffff;
+  animation: spin 1s ease-in-out infinite;
+  margin-right: 8px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* 表單驗證樣式 */
+.auth-form ion-item.error {
+  --border-color: #eb445a;
+  --highlight-color: #eb445a;
+}
+
+.error-message {
+  color: #eb445a;
+  font-size: 12px;
+  margin-top: 4px;
+  margin-left: 16px;
+  display: none;
+}
+
+.error-message.show {
+  display: block;
+}
+
+/* 響應式設計 */
+@media (max-width: 480px) {
+  .auth-container {
+    padding: 16px;
+  }
+  
+  .auth-form {
+    padding: 20px;
+  }
+  
+  .auth-header h2 {
+    font-size: 20px;
+  }
+  
+  .auth-modal .modal-content {
+    width: 95%;
+  }
+  
+  .auth-modal .modal-body {
+    padding: 16px;
+  }
+}
+
+/* 深色模式支援 */
+@media (prefers-color-scheme: dark) {
+  .auth-form {
+    background: #1e1e1e;
+    border-color: #333;
+  }
+  
+  .auth-header h2 {
+    color: #4c8dff;
+  }
+  
+  .auth-header p,
+  .auth-switch p,
+  .terms-label {
+    color: #ccc;
+  }
+  
+  .auth-modal .modal-content {
+    background: #1e1e1e;
+  }
+  
+  .auth-modal .modal-header {
+    border-bottom-color: #333;
+  }
+  
+  .auth-modal .modal-header h3 {
+    color: #4c8dff;
+  }
+  
+  .auth-modal .modal-body h4 {
+    color: #fff;
+  }
+  
+  .auth-modal .modal-body p {
+    color: #ccc;
+  }
+}
+
+/* 用戶資料頁面樣式 */
+.profile-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.profile-card {
+  background: white;
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e1e5e9;
+}
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.profile-avatar {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.profile-avatar img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #3880ff;
+}
+
+.avatar-upload-btn {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #3880ff;
+  color: white;
+  border: 2px solid white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  transition: all 0.2s;
+}
+
+.avatar-upload-btn:hover {
+  background: #3171e0;
+  transform: scale(1.1);
+}
+
+.profile-info h2 {
+  margin: 0 0 4px 0;
+  color: #333;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.profile-info p {
+  margin: 0 0 12px 0;
+  color: #666;
+  font-size: 16px;
+}
+
+.profile-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.profile-stats span {
+  font-size: 14px;
+  color: #777;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.profile-stats i {
+  color: #3880ff;
+  width: 14px;
+}
+
+.profile-section {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e1e5e9;
+}
+
+.profile-section h3 {
+  margin: 0 0 20px 0;
+  color: #333;
+  font-size: 18px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.profile-section h3 i {
+  color: #3880ff;
+  font-size: 16px;
+}
+
+.profile-section ion-item {
+  margin-bottom: 16px;
+  --border-radius: 8px;
+  --border-color: #d7dbe0;
+  --highlight-color: #3880ff;
+}
+
+.profile-section ion-input,
+.profile-section ion-textarea,
+.profile-section ion-select {
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --padding-top: 12px;
+  --padding-bottom: 12px;
+}
+
+.form-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.form-actions ion-button {
+  flex: 1;
+  height: 44px;
+  --border-radius: 8px;
+}
+
+/* 響應式設計 - 用戶資料頁面 */
+@media (max-width: 480px) {
+  .profile-container {
+    padding: 12px;
+  }
+  
+  .profile-card,
+  .profile-section {
+    padding: 16px;
+    margin-bottom: 12px;
+  }
+  
+  .profile-header {
+    flex-direction: column;
+    text-align: center;
+    gap: 16px;
+  }
+  
+  .profile-avatar img {
+    width: 100px;
+    height: 100px;
+  }
+  
+  .avatar-upload-btn {
+    width: 32px;
+    height: 32px;
+    font-size: 14px;
+  }
+  
+  .profile-stats {
+    align-items: center;
+  }
+  
+  .form-actions {
+    flex-direction: column;
+  }
+}
+
+/* 深色模式 - 用戶資料頁面 */
+@media (prefers-color-scheme: dark) {
+  .profile-card,
+  .profile-section {
+    background: #1e1e1e;
+    border-color: #333;
+  }
+  
+  .profile-info h2,
+  .profile-section h3 {
+    color: #fff;
+  }
+  
+  .profile-info p,
+  .profile-stats span {
+    color: #ccc;
+  }
+  
+  .profile-stats i,
+  .profile-section h3 i {
+    color: #4c8dff;
+  }
+}
