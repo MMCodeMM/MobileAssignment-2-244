@@ -40,6 +40,99 @@
       color: #000;
     }
 
+    /* ===== 優化的收藏按鈕樣式 ===== */
+    #favorites-button {
+      position: relative;
+      --background: transparent;
+      --background-hover: rgba(231, 76, 60, 0.1);
+      --background-activated: rgba(231, 76, 60, 0.2);
+      --color: #e74c3c;
+      --border-radius: 12px;
+      --padding-start: 12px;
+      --padding-end: 12px;
+      --min-height: 40px;
+      --min-width: 50px;
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      margin: 0 4px;
+      overflow: visible;
+    }
+
+    #favorites-button::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      background: radial-gradient(circle, rgba(231, 76, 60, 0.3) 0%, transparent 70%);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    #favorites-button:hover::before {
+      width: 60px;
+      height: 60px;
+    }
+
+    #favorites-button i {
+      font-size: 20px;
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      position: relative;
+      z-index: 1;
+      filter: drop-shadow(0 2px 4px rgba(231, 76, 60, 0.3));
+    }
+
+    #favorites-button:hover {
+      --color: #c0392b;
+      transform: translateY(-2px) scale(1.05);
+      box-shadow: 0 8px 25px rgba(231, 76, 60, 0.25);
+    }
+
+    #favorites-button:hover i {
+      transform: scale(1.15);
+      animation: heartbeat 1.5s ease-in-out infinite;
+    }
+
+    #favorites-button:active {
+      transform: translateY(0) scale(0.95);
+      transition: all 0.1s ease;
+    }
+
+    @keyframes heartbeat {
+      0%, 50%, 100% { transform: scale(1.15); }
+      25%, 75% { transform: scale(1.25); }
+    }
+
+    /* 收藏按鈕的脈衝效果 */
+    #favorites-button.has-favorites::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 100%;
+      height: 100%;
+      background: rgba(231, 76, 60, 0.2);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      animation: pulse-glow 2s ease-in-out infinite;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    @keyframes pulse-glow {
+      0%, 100% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0.7;
+      }
+      50% {
+        transform: translate(-50%, -50%) scale(1.3);
+        opacity: 0;
+      }
+    }
+
     /* ===== 搜尋與分類 ===== */
     ion-searchbar {
       --background: #fff;
@@ -694,6 +787,94 @@
       .media-video-section {
         height: 220px;
       }
+      
+      /* 桌面版收藏按鈕優化 */
+      #favorites-button {
+        --min-width: 60px;
+        --min-height: 44px;
+      }
+      
+      #favorites-button i {
+        font-size: 22px;
+      }
+      
+      ion-badge.favorites-count {
+        min-width: 22px;
+        height: 22px;
+        font-size: 12px;
+        top: -10px;
+        right: -10px;
+      }
+    }
+
+    /* 平板版調整 */
+    @media (max-width: 1024px) and (min-width: 769px) {
+      #favorites-button {
+        --min-width: 55px;
+        --min-height: 42px;
+      }
+      
+      #favorites-button i {
+        font-size: 21px;
+      }
+      
+      ion-badge.favorites-count {
+        min-width: 21px;
+        height: 21px;
+        font-size: 11px;
+      }
+    }
+
+    /* 手機版調整 */
+    @media (max-width: 768px) {
+      #favorites-button {
+        --min-width: 48px;
+        --min-height: 40px;
+        --padding-start: 10px;
+        --padding-end: 10px;
+        margin: 0 2px;
+      }
+      
+      #favorites-button i {
+        font-size: 19px;
+      }
+      
+      #favorites-button:hover::before {
+        width: 50px;
+        height: 50px;
+      }
+      
+      ion-badge.favorites-count {
+        min-width: 18px;
+        height: 18px;
+        font-size: 10px;
+        top: -6px;
+        right: -6px;
+        border-width: 1.5px;
+      }
+    }
+
+    /* 小手機調整 */
+    @media (max-width: 480px) {
+      #favorites-button {
+        --min-width: 44px;
+        --min-height: 36px;
+        --padding-start: 8px;
+        --padding-end: 8px;
+      }
+      
+      #favorites-button i {
+        font-size: 18px;
+      }
+      
+      ion-badge.favorites-count {
+        min-width: 16px;
+        height: 16px;
+        font-size: 9px;
+        top: -4px;
+        right: -4px;
+        border-width: 1px;
+      }
     }
 
     /* ===== 收藏功能樣式 ===== */
@@ -721,17 +902,76 @@
       --background: #ffcccc;
     }
 
-    /* 收藏數量徽章 */
+    /* ===== 優化的收藏數量徽章 ===== */
     ion-badge.favorites-count {
-      --background: #e74c3c;
+      --background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
       --color: white;
-      font-size: 10px;
-      min-width: 16px;
-      height: 16px;
-      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 700;
+      min-width: 20px;
+      height: 20px;
+      border-radius: 10px;
       position: absolute;
-      top: -2px;
-      right: -6px;
+      top: -8px;
+      right: -8px;
+      border: 2px solid white;
+      box-shadow: 
+        0 3px 8px rgba(231, 76, 60, 0.4),
+        0 1px 3px rgba(0, 0, 0, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2;
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      backdrop-filter: blur(10px);
+    }
+
+    /* 徽章動畫效果 */
+    #favorites-button:hover ion-badge.favorites-count {
+      transform: scale(1.2) rotate(5deg);
+      box-shadow: 
+        0 4px 12px rgba(231, 76, 60, 0.5),
+        0 2px 6px rgba(0, 0, 0, 0.3);
+    }
+
+    /* 當收藏數量更新時的動畫 */
+    @keyframes badge-update {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.3) rotate(10deg); }
+      100% { transform: scale(1); }
+    }
+
+    ion-badge.favorites-count.updated {
+      animation: badge-update 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+
+    /* 當沒有收藏時隱藏徽章 */
+    ion-badge.favorites-count[style*="display: none"],
+    ion-badge.favorites-count.empty {
+      opacity: 0;
+      transform: scale(0);
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+
+    /* 徽章出現動畫 */
+    ion-badge.favorites-count.show {
+      opacity: 1;
+      transform: scale(1);
+      animation: badge-appear 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+
+    @keyframes badge-appear {
+      0% {
+        opacity: 0;
+        transform: scale(0) rotate(-180deg);
+      }
+      60% {
+        transform: scale(1.2) rotate(10deg);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1) rotate(0deg);
+      }
     }
 
     /* 視圖模式指示器 */

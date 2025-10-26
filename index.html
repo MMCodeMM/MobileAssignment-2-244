@@ -277,6 +277,57 @@
         }
       }
 
+      // ===== 收藏按鈕增強功能 =====
+      function enhanceFavoritesButton() {
+        const favoritesButton = document.getElementById("favorites-button");
+        const favoritesCount = document.querySelector(".favorites-count");
+
+        if (!favoritesButton) return;
+
+        // 添加收藏數量變化的動畫
+        function animateBadgeUpdate() {
+          if (favoritesCount) {
+            favoritesCount.classList.add("updated");
+            setTimeout(() => {
+              favoritesCount.classList.remove("updated");
+            }, 600);
+          }
+        }
+
+        // 根據收藏數量更新按鈕狀態
+        function updateFavoritesButtonState() {
+          if (!window.favoritesManager) return;
+
+          const count = window.favoritesManager.favorites.length;
+
+          // 添加或移除脈衝效果
+          if (count > 0) {
+            favoritesButton.classList.add("has-favorites");
+            if (favoritesCount) {
+              favoritesCount.classList.add("show");
+              favoritesCount.classList.remove("empty");
+            }
+          } else {
+            favoritesButton.classList.remove("has-favorites");
+            if (favoritesCount) {
+              favoritesCount.classList.remove("show");
+              favoritesCount.classList.add("empty");
+            }
+          }
+        }
+
+        // 監聽收藏變化事件
+        window.addEventListener("favoritesChanged", () => {
+          updateFavoritesButtonState();
+          animateBadgeUpdate();
+        });
+
+        // 初始化按鈕狀態
+        updateFavoritesButtonState();
+
+        console.log("收藏按鈕增強功能已啟用");
+      }
+
       // 認證按鈕處理函數
       function handleAuthButton() {
         if (window.mainPageAuth && window.mainPageAuth.isLoggedIn()) {
@@ -395,6 +446,9 @@
       // 頁面載入完成後初始化認證系統
       document.addEventListener("DOMContentLoaded", () => {
         window.mainPageAuth = new MainPageAuth();
+
+        // 初始化收藏按鈕增強功能
+        enhanceFavoritesButton();
       });
     </script>
   </body>

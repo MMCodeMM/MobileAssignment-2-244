@@ -253,7 +253,31 @@ class FavoritesManager {
     const countElements = document.querySelectorAll('.favorites-count');
     countElements.forEach(element => {
       element.textContent = this.favorites.length;
+      
+      // 添加顯示/隱藏邏輯
+      if (this.favorites.length > 0) {
+        element.style.display = '';
+        element.classList.add('show');
+        element.classList.remove('empty');
+      } else {
+        element.classList.remove('show');
+        element.classList.add('empty');
+        // 延遲隱藏以允許動畫播放完成
+        setTimeout(() => {
+          if (element.classList.contains('empty')) {
+            element.style.display = 'none';
+          }
+        }, 300);
+      }
     });
+    
+    // 觸發收藏變化事件
+    window.dispatchEvent(new CustomEvent('favoritesChanged', {
+      detail: {
+        count: this.favorites.length,
+        action: 'update'
+      }
+    }));
   }
 
   // 創建收藏按鈕
