@@ -1,350 +1,401 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MAX教學運動平台</title>
-  <script type="module" src="https://cdn.jsdelivr.net/npm/@ionic/core/dist/ionic/ionic.esm.js"></script>
-  <script nomodule src="https://cdn.jsdelivr.net/npm/@ionic/core/dist/ionic/ionic.js"></script>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@ionic/core/css/ionic.bundle.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <ion-app>
-    <ion-header>
-      <ion-toolbar>
-        <ion-title>MAX教學運動平台</ion-title>
-        <ion-buttons slot="end">
-          <ion-button id="favorites-button" onclick="goToFavorites()" style="display: none;">
-            <i class="fas fa-heart"></i>
-            <ion-badge class="favorites-count" color="danger">0</ion-badge>
-          </ion-button>
-          <ion-button id="auth-button" onclick="handleAuthButton()">
-            <i class="fas fa-user"></i>
-          </ion-button>
-          <ion-button id="logout-button" onclick="handleLogout()" style="display: none;">
-            <i class="fas fa-sign-out-alt"></i>
-          </ion-button>
-        </ion-buttons>
-      </ion-toolbar>
-
-      <ion-searchbar id="search-bar" placeholder="搜尋..."></ion-searchbar>
-
-      <div class="category-header">
-        <ion-select id="category-select" label="分類" interface="popover" class="category-select">
-          <ion-select-option value="">全部</ion-select-option>
-        </ion-select>
-        <ion-button id="reset-category" fill="clear">
-          <i class="fas fa-undo"></i>
-          重設篩選
-        </ion-button>
-        <ion-button id="toggle-favorites" fill="clear" style="display: none;" onclick="toggleFavoritesView()">
-          <i class="fas fa-heart" id="favorites-toggle-icon"></i>
-          <span id="favorites-toggle-text">顯示收藏</span>
-        </ion-button>
-      </div>
-
-      <div class="stats-bar">
-        <div class="stats-item">
-          <i class="fas fa-list"></i>
-          共 <span id="total-count">20</span> 個項目
-        </div>
-        <div class="stats-item">
-          <i class="fas fa-filter"></i>
-          顯示: <span id="filter-count">20</span> 個項目
-        </div>
-        <div class="stats-item">
-          <i class="fas fa-tag"></i>
-          當前分類: 
-          <span id="active-filter" class="filter-indicator">全部</span>
-          <i class="fas fa-times-circle" id="clear-filter" style="cursor:pointer; margin-left: 4px;" title="清除分類篩選"></i>
-        </div>
-        <div class="stats-item" id="user-welcome" style="display: none;">
-          <i class="fas fa-user-check"></i>
-          歡迎, <span id="user-display-name"></span>
-        </div>
-        <div class="stats-item" id="favorites-stats" style="display: none;">
-          <i class="fas fa-heart"></i>
-          已收藏: <span class="favorites-count">0</span> 個項目
-        </div>
-        <div class="stats-item" id="view-mode-indicator" style="display: none;">
-          <i class="fas fa-eye"></i>
-          目前檢視: <span id="current-view-mode">全部項目</span>
-        </div>
-      </div>
-    </ion-header>
-
-    <ion-content>
-      <div id="content-wrapper">
-        <div class="container">
-          <div class="exercise-grid" id="exercise-grid"></div>
-
-          <div id="no-results" class="no-results">
-            <i class="fas fa-dumbbell"></i>
-            <h3>沒有找到相關項目</h3>
-            <p>請嘗試其他搜尋詞或重設篩選條件</p>
-          </div>
-
-          <div id="no-favorites-in-view" class="no-results" style="display: none;">
-            <i class="fas fa-heart-broken"></i>
-            <h3>目前沒有收藏的項目符合篩選條件</h3>
-            <p>請調整搜尋條件或收藏更多項目</p>
-            <ion-button onclick="toggleFavoritesView()" class="auth-button">
-              <i class="fas fa-list"></i>
-              顯示全部項目
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MAX教學運動平台</title>
+    <script
+      type="module"
+      src="https://cdn.jsdelivr.net/npm/@ionic/core/dist/ionic/ionic.esm.js"
+    ></script>
+    <script
+      nomodule
+      src="https://cdn.jsdelivr.net/npm/@ionic/core/dist/ionic/ionic.js"
+    ></script>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@ionic/core/css/ionic.bundle.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <ion-app>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>MAX教學運動平台</ion-title>
+          <ion-buttons slot="end">
+            <ion-button
+              id="favorites-button"
+              onclick="goToFavorites()"
+              style="display: none"
+            >
+              <i class="fas fa-heart"></i>
+              <ion-badge class="favorites-count" color="danger">0</ion-badge>
             </ion-button>
+            <ion-button id="auth-button" onclick="handleAuthButton()">
+              <i class="fas fa-user"></i>
+            </ion-button>
+            <ion-button
+              id="logout-button"
+              onclick="handleLogout()"
+              style="display: none"
+            >
+              <i class="fas fa-sign-out-alt"></i>
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+
+        <ion-searchbar id="search-bar" placeholder="搜尋..."></ion-searchbar>
+
+        <div class="category-header">
+          <ion-select
+            id="category-select"
+            label="分類"
+            interface="popover"
+            class="category-select"
+          >
+            <ion-select-option value="">全部</ion-select-option>
+          </ion-select>
+          <ion-button id="reset-category" fill="clear">
+            <i class="fas fa-undo"></i>
+            重設篩選
+          </ion-button>
+          <ion-button
+            id="toggle-favorites"
+            fill="clear"
+            style="display: none"
+            onclick="toggleFavoritesView()"
+          >
+            <i class="fas fa-heart" id="favorites-toggle-icon"></i>
+            <span id="favorites-toggle-text">顯示收藏</span>
+          </ion-button>
+        </div>
+
+        <div class="stats-bar">
+          <div class="stats-item">
+            <i class="fas fa-list"></i>
+            共 <span id="total-count">20</span> 個項目
+          </div>
+          <div class="stats-item">
+            <i class="fas fa-filter"></i>
+            顯示: <span id="filter-count">20</span> 個項目
+          </div>
+          <div class="stats-item">
+            <i class="fas fa-tag"></i>
+            當前分類:
+            <span id="active-filter" class="filter-indicator">全部</span>
+            <i
+              class="fas fa-times-circle"
+              id="clear-filter"
+              style="cursor: pointer; margin-left: 4px"
+              title="清除分類篩選"
+            ></i>
+          </div>
+          <div class="stats-item" id="user-welcome" style="display: none">
+            <i class="fas fa-user-check"></i>
+            歡迎, <span id="user-display-name"></span>
+          </div>
+          <div class="stats-item" id="favorites-stats" style="display: none">
+            <i class="fas fa-heart"></i>
+            已收藏: <span class="favorites-count">0</span> 個項目
+          </div>
+          <div
+            class="stats-item"
+            id="view-mode-indicator"
+            style="display: none"
+          >
+            <i class="fas fa-eye"></i>
+            目前檢視: <span id="current-view-mode">全部項目</span>
+          </div>
+        </div>
+      </ion-header>
+
+      <ion-content>
+        <div id="content-wrapper">
+          <div class="container">
+            <div class="exercise-grid" id="exercise-grid"></div>
+
+            <div id="no-results" class="no-results">
+              <i class="fas fa-dumbbell"></i>
+              <h3>沒有找到相關項目</h3>
+              <p>請嘗試其他搜尋詞或重設篩選條件</p>
+            </div>
+
+            <div
+              id="no-favorites-in-view"
+              class="no-results"
+              style="display: none"
+            >
+              <i class="fas fa-heart-broken"></i>
+              <h3>目前沒有收藏的項目符合篩選條件</h3>
+              <p>請調整搜尋條件或收藏更多項目</p>
+              <ion-button onclick="toggleFavoritesView()" class="auth-button">
+                <i class="fas fa-list"></i>
+                顯示全部項目
+              </ion-button>
+            </div>
+          </div>
+        </div>
+      </ion-content>
+
+      <div class="footer">
+        <p>MAX運動教學平台 © 2025 | 經典設計，專業教學</p>
+      </div>
+
+      <!-- 圖片放大預覽模態 -->
+      <div id="image-modal" class="image-modal" style="display: none">
+        <div class="modal-backdrop" id="modal-backdrop"></div>
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3 id="modal-title">圖片預覽</h3>
+            <button class="modal-close" id="modal-close">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+          <div class="modal-body">
+            <img id="modal-image" src="" alt="放大圖片" />
+            <div class="image-loading" id="image-loading">
+              <i class="fas fa-spinner fa-spin"></i>
+              <div>載入中...</div>
+            </div>
+            <div class="image-error" id="image-error" style="display: none">
+              <i class="fas fa-exclamation-triangle"></i>
+              <div>圖片載入失敗</div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <div class="image-info" id="image-info"></div>
           </div>
         </div>
       </div>
-    </ion-content>
+    </ion-app>
 
-    <div class="footer">
-      <p>MAX運動教學平台 © 2025 | 經典設計，專業教學</p>
-    </div>
+    <script type="module" src="/data/trainingData.js"></script>
+    <script src="auth.js"></script>
+    <script src="favorites.js"></script>
+    <script>
+      //let token = '123456'
 
-    <!-- 圖片放大預覽模態 -->
-    <div id="image-modal" class="image-modal" style="display: none;">
-      <div class="modal-backdrop" id="modal-backdrop"></div>
-      <div class="modal-content">
-        <div class="modal-header">
-          <h3 id="modal-title">圖片預覽</h3>
-          <button class="modal-close" id="modal-close">
-            <i class="fas fa-times"></i>
-          </button>
-        </div>
-        <div class="modal-body">
-          <img id="modal-image" src="" alt="放大圖片" />
-          <div class="image-loading" id="image-loading">
-            <i class="fas fa-spinner fa-spin"></i>
-            <div>載入中...</div>
-          </div>
-          <div class="image-error" id="image-error" style="display: none;">
-            <i class="fas fa-exclamation-triangle"></i>
-            <div>圖片載入失敗</div>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <div class="image-info" id="image-info"></div>
-        </div>
-      </div>
-    </div>
-  </ion-app>
+      //headers: { Authorization: `Bearer ${token}` },
 
-  <script type="module" src="/data/trainingData.js"></script>
-  <script src="auth.js"></script>
-  <script src="favorites.js"></script>
-  <script>
-  //let token = '123456'
-
-    //headers: { Authorization: `Bearer ${token}` },
-
-    // 認證系統集成
-    class MainPageAuth {
-      constructor() {
-        this.authSystem = null;
-        this.init();
-      }
-
-      init() {
-        // 載入認證系統
-        this.loadAuthSystem();
-        // 檢查登入狀態
-        this.checkAuthStatus();
-      }
-
-      loadAuthSystem() {
-        // 簡化版的認證檢查，不依賴完整的 AuthSystem 類
-        this.currentUser = this.loadCurrentUser();
-      }
-
-      loadCurrentUser() {
-        // 優先從 localStorage 載入（記住我功能）
-        let user = localStorage.getItem('maxSports_currentUser');
-        if (user && localStorage.getItem('maxSports_rememberMe')) {
-          return JSON.parse(user);
+      // 認證系統集成
+      class MainPageAuth {
+        constructor() {
+          this.authSystem = null;
+          this.init();
         }
-        
-        // 從 sessionStorage 載入
-        user = sessionStorage.getItem('maxSports_currentUser');
-        return user ? JSON.parse(user) : null;
-      }
 
-      checkAuthStatus() {
-        const authButton = document.getElementById('auth-button');
-        const logoutButton = document.getElementById('logout-button');
-        const favoritesButton = document.getElementById('favorites-button');
-        const toggleFavoritesBtn = document.getElementById('toggle-favorites');
-        const userWelcome = document.getElementById('user-welcome');
-        const favoritesStats = document.getElementById('favorites-stats');
-        const viewModeIndicator = document.getElementById('view-mode-indicator');
-        const userDisplayName = document.getElementById('user-display-name');
+        init() {
+          // 載入認證系統
+          this.loadAuthSystem();
+          // 檢查登入狀態
+          this.checkAuthStatus();
+        }
 
-        if (this.currentUser) {
-          // 用戶已登入
-          authButton.style.display = 'none';
-          logoutButton.style.display = 'block';
-          favoritesButton.style.display = 'block';
-          toggleFavoritesBtn.style.display = 'block';
-          userWelcome.style.display = 'block';
-          favoritesStats.style.display = 'block';
-          viewModeIndicator.style.display = 'block';
-          userDisplayName.textContent = this.currentUser.profile.displayName;
-          
-          // 更新按鈕文字和圖標
-          authButton.innerHTML = '<i class="fas fa-user-circle"></i>';
-          authButton.setAttribute('title', '用戶資料');
-          
-          // 初始化收藏管理器
-          if (!window.favoritesManager) {
-            window.favoritesManager = new FavoritesManager();
+        loadAuthSystem() {
+          // 簡化版的認證檢查，不依賴完整的 AuthSystem 類
+          this.currentUser = this.loadCurrentUser();
+        }
+
+        loadCurrentUser() {
+          // 優先從 localStorage 載入（記住我功能）
+          let user = localStorage.getItem("maxSports_currentUser");
+          if (user && localStorage.getItem("maxSports_rememberMe")) {
+            return JSON.parse(user);
           }
-          
-          // 初始化收藏視圖狀態
-          window.showingFavoritesOnly = false;
-        } else {
-          // 用戶未登入
-          authButton.style.display = 'block';
-          logoutButton.style.display = 'none';
-          favoritesButton.style.display = 'none';
-          toggleFavoritesBtn.style.display = 'none';
-          userWelcome.style.display = 'none';
-          favoritesStats.style.display = 'none';
-          viewModeIndicator.style.display = 'none';
-          
-          // 更新按鈕文字和圖標
-          authButton.innerHTML = '<i class="fas fa-sign-in-alt"></i>';
-          authButton.setAttribute('title', '登入/註冊');
-          
-          // 清除收藏管理器
-          window.favoritesManager = null;
-          window.showingFavoritesOnly = false;
+
+          // 從 sessionStorage 載入
+          user = sessionStorage.getItem("maxSports_currentUser");
+          return user ? JSON.parse(user) : null;
+        }
+
+        checkAuthStatus() {
+          const authButton = document.getElementById("auth-button");
+          const logoutButton = document.getElementById("logout-button");
+          const favoritesButton = document.getElementById("favorites-button");
+          const toggleFavoritesBtn =
+            document.getElementById("toggle-favorites");
+          const userWelcome = document.getElementById("user-welcome");
+          const favoritesStats = document.getElementById("favorites-stats");
+          const viewModeIndicator = document.getElementById(
+            "view-mode-indicator"
+          );
+          const userDisplayName = document.getElementById("user-display-name");
+
+          if (this.currentUser) {
+            // 用戶已登入
+            authButton.style.display = "none";
+            logoutButton.style.display = "block";
+            favoritesButton.style.display = "block";
+            toggleFavoritesBtn.style.display = "block";
+            userWelcome.style.display = "block";
+            favoritesStats.style.display = "block";
+            viewModeIndicator.style.display = "block";
+            userDisplayName.textContent = this.currentUser.profile.displayName;
+
+            // 更新按鈕文字和圖標
+            authButton.innerHTML = '<i class="fas fa-user-circle"></i>';
+            authButton.setAttribute("title", "用戶資料");
+
+            // 初始化收藏管理器
+            if (!window.favoritesManager) {
+              window.favoritesManager = new FavoritesManager();
+            }
+
+            // 初始化收藏視圖狀態
+            window.showingFavoritesOnly = false;
+          } else {
+            // 用戶未登入
+            authButton.style.display = "block";
+            logoutButton.style.display = "none";
+            favoritesButton.style.display = "none";
+            toggleFavoritesBtn.style.display = "none";
+            userWelcome.style.display = "none";
+            favoritesStats.style.display = "none";
+            viewModeIndicator.style.display = "none";
+
+            // 更新按鈕文字和圖標
+            authButton.innerHTML = '<i class="fas fa-sign-in-alt"></i>';
+            authButton.setAttribute("title", "登入/註冊");
+
+            // 清除收藏管理器
+            window.favoritesManager = null;
+            window.showingFavoritesOnly = false;
+          }
+        }
+
+        isLoggedIn() {
+          return this.currentUser !== null;
+        }
+
+        getCurrentUser() {
+          return this.currentUser;
         }
       }
 
-      isLoggedIn() {
-        return this.currentUser !== null;
+      // 認證按鈕處理函數
+      function handleAuthButton() {
+        if (window.mainPageAuth && window.mainPageAuth.isLoggedIn()) {
+          // 已登入，顯示用戶資料或選單
+          showUserMenu();
+        } else {
+          // 未登入，跳轉到登入頁面
+          window.location.href = "auth.html?action=login";
+        }
       }
 
-      getCurrentUser() {
-        return this.currentUser;
-      }
-    }
+      // 登出處理函數
+      function handleLogout() {
+        if (confirm("確定要登出嗎？")) {
+          // 清除認證數據
+          localStorage.removeItem("maxSports_currentUser");
+          sessionStorage.removeItem("maxSports_currentUser");
+          localStorage.removeItem("maxSports_rememberMe");
 
-    // 認證按鈕處理函數
-    function handleAuthButton() {
-      if (window.mainPageAuth && window.mainPageAuth.isLoggedIn()) {
-        // 已登入，顯示用戶資料或選單
-        showUserMenu();
-      } else {
-        // 未登入，跳轉到登入頁面
-        window.location.href = 'auth.html?action=login';
-      }
-    }
-
-    // 登出處理函數
-    function handleLogout() {
-      if (confirm('確定要登出嗎？')) {
-        // 清除認證數據
-        localStorage.removeItem('maxSports_currentUser');
-        sessionStorage.removeItem('maxSports_currentUser');
-        localStorage.removeItem('maxSports_rememberMe');
-        
-        // 重新載入頁面
-        window.location.reload();
-      }
-    }
-
-    // 顯示用戶選單（簡化版）
-    function showUserMenu() {
-      const user = window.mainPageAuth.getCurrentUser();
-      const options = [
-        '用戶資料',
-        '設定',
-        '登出'
-      ];
-      
-      // 使用 confirm 作為簡單的選單
-      const choice = prompt(`歡迎 ${user.profile.displayName}!\n\n選擇功能:\n1. 用戶資料\n2. 設定\n3. 登出\n\n請輸入數字 (1-3):`);
-      
-      switch(choice) {
-        case '1':
-          window.location.href = 'profile.html';
-          break;
-        case '2':
-          showUserSettings();
-          break;
-        case '3':
-          handleLogout();
-          break;
-      }
-    }
-
-    // 顯示用戶資料
-    function showUserProfile() {
-      window.location.href = 'profile.html';
-    }
-
-    // 顯示用戶設定
-    function showUserSettings() {
-      window.location.href = 'profile.html';
-    }
-
-    // 跳轉到收藏頁面
-    function goToFavorites() {
-      window.location.href = 'favorites.html';
-    }
-
-    // 切換收藏視圖
-    function toggleFavoritesView() {
-      if (!window.favoritesManager) {
-        alert('請先登入以使用收藏功能');
-        return;
+          // 重新載入頁面
+          window.location.reload();
+        }
       }
 
-      window.showingFavoritesOnly = !window.showingFavoritesOnly;
-      
-      const toggleBtn = document.getElementById('toggle-favorites');
-      const toggleIcon = document.getElementById('favorites-toggle-icon');
-      const toggleText = document.getElementById('favorites-toggle-text');
-      const viewModeSpan = document.getElementById('current-view-mode');
-      
-      if (window.showingFavoritesOnly) {
-        // 切換到收藏視圖
-        toggleIcon.className = 'fas fa-list';
-        toggleText.textContent = '顯示全部';
-        viewModeSpan.textContent = '收藏項目';
-        toggleBtn.style.color = '#e74c3c';
-      } else {
-        // 切換到全部視圖
-        toggleIcon.className = 'fas fa-heart';
-        toggleText.textContent = '顯示收藏';
-        viewModeSpan.textContent = '全部項目';
-        toggleBtn.style.color = '';
-      }
-      
-      // 觸發重新篩選
-      if (typeof applyFilters === 'function') {
-        // 等待 DOM 更新後再執行
-        setTimeout(() => {
-          window.dispatchEvent(new Event('favoritesViewChanged'));
-        }, 100);
-      }
-      
-      // 顯示切換提示
-      const message = window.showingFavoritesOnly ? 
-        '已切換到收藏視圖' : '已切換到全部項目視圖';
-      
-      if (window.favoritesManager && window.favoritesManager.showToast) {
-        window.favoritesManager.showToast(message, 'success');
-      }
-    }
+      // 顯示用戶選單（簡化版）
+      function showUserMenu() {
+        const user = window.mainPageAuth.getCurrentUser();
+        const options = ["用戶資料", "設定", "登出"];
 
-    // 頁面載入完成後初始化認證系統
-    document.addEventListener('DOMContentLoaded', () => {
-      window.mainPageAuth = new MainPageAuth();
-    });
+        // 使用 confirm 作為簡單的選單
+        const choice = prompt(
+          `歡迎 ${user.profile.displayName}!\n\n選擇功能:\n1. 用戶資料\n2. 設定\n3. 登出\n\n請輸入數字 (1-3):`
+        );
 
-  </script>
-</body>
+        switch (choice) {
+          case "1":
+            window.location.href = "profile.html";
+            break;
+          case "2":
+            showUserSettings();
+            break;
+          case "3":
+            handleLogout();
+            break;
+        }
+      }
+
+      // 顯示用戶資料
+      function showUserProfile() {
+        window.location.href = "profile.html";
+      }
+
+      // 顯示用戶設定
+      function showUserSettings() {
+        window.location.href = "profile.html";
+      }
+
+      // 跳轉到收藏頁面
+      function goToFavorites() {
+        window.location.href = "favorites.html";
+      }
+
+      // 切換收藏視圖
+      function toggleFavoritesView() {
+        if (!window.favoritesManager) {
+          alert("請先登入以使用收藏功能");
+          return;
+        }
+
+        // 切換狀態
+        window.showingFavoritesOnly = !window.showingFavoritesOnly;
+
+        const toggleBtn = document.getElementById("toggle-favorites");
+        const toggleIcon = document.getElementById("favorites-toggle-icon");
+        const toggleText = document.getElementById("favorites-toggle-text");
+        const viewModeSpan = document.getElementById("current-view-mode");
+
+        console.log("切換收藏視圖:", window.showingFavoritesOnly);
+
+        if (window.showingFavoritesOnly) {
+          // 切換到收藏視圖
+          toggleIcon.className = "fas fa-list";
+          toggleText.textContent = "顯示全部";
+          if (viewModeSpan) viewModeSpan.textContent = "收藏項目";
+          toggleBtn.style.color = "#e74c3c";
+        } else {
+          // 切換到全部視圖
+          toggleIcon.className = "fas fa-heart";
+          toggleText.textContent = "顯示收藏";
+          if (viewModeSpan) viewModeSpan.textContent = "全部項目";
+          toggleBtn.style.color = "";
+        }
+
+        // 立即觸發重新篩選
+        console.log("立即觸發收藏視圖變更事件");
+        window.dispatchEvent(new Event("favoritesViewChanged"));
+
+        // 如果 applyFilters 函數存在，也直接調用
+        if (typeof applyFilters === "function") {
+          console.log("直接調用 applyFilters");
+          applyFilters();
+        }
+
+        // 顯示切換提示
+        const message = window.showingFavoritesOnly
+          ? "已切換到收藏視圖"
+          : "已切換到全部項目視圖";
+
+        if (window.favoritesManager && window.favoritesManager.showToast) {
+          window.favoritesManager.showToast(message, "success");
+        }
+
+        console.log("收藏視圖切換完成，當前狀態:", window.showingFavoritesOnly);
+      }
+
+      // 頁面載入完成後初始化認證系統
+      document.addEventListener("DOMContentLoaded", () => {
+        window.mainPageAuth = new MainPageAuth();
+      });
+    </script>
+  </body>
 </html>

@@ -443,7 +443,16 @@ document.addEventListener("DOMContentLoaded", () => {
     const q = (searchbar?.value || "").toLowerCase().trim();
     const cat = categorySelect?.value || "";
 
-    console.log("套用篩選 - 搜尋詞:", q, "分類:", cat, "收藏視圖:", window.showingFavoritesOnly);
+    console.log("=== 開始套用篩選 ===");
+    console.log("搜尋詞:", q);
+    console.log("分類:", cat);
+    console.log("收藏視圖:", window.showingFavoritesOnly);
+    console.log("收藏管理器存在:", !!window.favoritesManager);
+    
+    if (window.favoritesManager) {
+      console.log("當前收藏數量:", window.favoritesManager.favorites.length);
+      console.log("收藏列表:", window.favoritesManager.favorites.map(f => ({id: f.id, title: f.title})));
+    }
 
     let filtered = (originalItems || []).filter(it => {
       const matchesSearch =
@@ -455,14 +464,31 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const matchesCategory = !cat || it.tags?.includes(cat) || it.level === cat;
 
-      // 收藏視圖篩選
+      // 收藏視圖篩選 - 增加詳細日誌
       let matchesFavorites = true;
-      if (window.showingFavoritesOnly && window.favoritesManager) {
-        matchesFavorites = window.favoritesManager.isFavorite(it.id);
+      if (window.showingFavoritesOnly) {
+        if (window.favoritesManager) {
+          matchesFavorites = window.favoritesManager.isFavorite(it.id);
+          console.log(`項目 ${it.title} (ID: ${it.id}) - 是否收藏:`, matchesFavorites);
+        } else {
+          console.warn("收藏視圖模式但沒有收藏管理器");
+          matchesFavorites = false;
+        }
       }
 
-      return matchesSearch && matchesCategory && matchesFavorites;
+      const finalMatch = matchesSearch && matchesCategory && matchesFavorites;
+      
+      // 如果是收藏視圖，記錄每個項目的篩選結果
+      if (window.showingFavoritesOnly) {
+        console.log(`項目篩選結果 - ${it.title}: 搜尋:${matchesSearch}, 分類:${matchesCategory}, 收藏:${matchesFavorites}, 最終:${finalMatch}`);
+      }
+
+      return finalMatch;
     });
+
+    console.log("篩選前總數:", originalItems.length);
+    console.log("篩選後數量:", filtered.length);
+    console.log("篩選結果項目:", filtered.map(item => ({id: item.id, title: item.title})));
 
     // 更新篩選指示器
     if (cat) {
@@ -480,7 +506,7 @@ document.addEventListener("DOMContentLoaded", () => {
       console.log(`正在搜尋: "${q}"`);
     }
 
-    console.log("篩選結果:", filtered.length, "筆，總數:", originalItems.length);
+    console.log("=== 篩選完成 ===");
     renderGrid(filtered);
   }
 

@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>收藏功能測試</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+        background-color: #f5f5f5;
+      }
+      .test-container {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+      }
+      .test-result {
+        margin: 10px 0;
+        padding: 10px;
+        border-radius: 4px;
+      }
+      .success {
+        background-color: #d4edda;
+        color: #155724;
+      }
+      .error {
+        background-color: #f8d7da;
+        color: #721c24;
+      }
+      .info {
+        background-color: #d1ecf1;
+        color: #0c5460;
+      }
+      button {
+        margin: 5px;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        background-color: #007bff;
+        color: white;
+      }
+      button:hover {
+        background-color: #0056b3;
+      }
+      .favorites-toggle {
+        background-color: #28a745;
+      }
+      .favorites-toggle:hover {
+        background-color: #1e7e34;
+      }
+      #debug-output {
+        background-color: #f8f9fa;
+        border: 1px solid #e9ecef;
+        padding: 15px;
+        border-radius: 4px;
+        white-space: pre-wrap;
+        font-family: monospace;
+        font-size: 12px;
+        max-height: 300px;
+        overflow-y: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="test-container">
+      <h2>🧪 收藏功能測試工具</h2>
+      <p>這個頁面用來測試收藏功能是否正確工作</p>
+
+      <div class="test-result info">
+        <strong>測試步驟：</strong><br />
+        1. 點擊「模擬登入用戶」<br />
+        2. 點擊「初始化收藏管理器」<br />
+        3. 點擊「添加測試收藏」<br />
+        4. 點擊「切換收藏視圖」查看結果<br />
+        5. 觀察調試輸出
+      </div>
+
+      <button onclick="simulateLogin()">模擬登入用戶</button>
+      <button onclick="initializeFavorites()">初始化收藏管理器</button>
+      <button onclick="addTestFavorite()">添加測試收藏</button>
+      <button class="favorites-toggle" onclick="toggleFavoritesView()">
+        切換收藏視圖
+      </button>
+      <button onclick="checkFavoriteStatus()">檢查收藏狀態</button>
+      <button onclick="clearDebug()">清除調試</button>
+
+      <div id="test-results"></div>
+
+      <h3>📊 當前狀態</h3>
+      <div id="current-status">
+        <p>用戶狀態: <span id="user-status">未登入</span></p>
+        <p>收藏管理器: <span id="manager-status">未初始化</span></p>
+        <p>收藏視圖: <span id="view-status">全部項目</span></p>
+        <p>收藏數量: <span id="favorites-count">0</span></p>
+      </div>
+
+      <h3>🐛 調試輸出</h3>
+      <div id="debug-output"></div>
+    </div>
+
+    <!-- 引入必要的腳本 -->
+    <script src="auth.js"></script>
+    <script src="favorites.js"></script>
+
+    <script>
+      // 全局變量
+      window.showingFavoritesOnly = false;
+      let testUser = null;
+      let debugOutput = document.getElementById("debug-output");
+
+      // 攔截 console.log 顯示在頁面上
+      const originalConsoleLog = console.log;
+      console.log = function (...args) {
+        originalConsoleLog.apply(console, args);
+        debugOutput.textContent += args.join(" ") + "\n";
+        debugOutput.scrollTop = debugOutput.scrollHeight;
+      };
+
+      function addResult(message, type = "info") {
+        const div = document.createElement("div");
+        div.className = `test-result ${type}`;
+        div.textContent = message;
+        document.getElementById("test-results").appendChild(div);
+      }
+
+      function updateStatus() {
+        document.getElementById("user-status").textContent = testUser
+          ? `已登入 (${testUser.username})`
+          : "未登入";
+        document.getElementById("manager-status").textContent =
+          window.favoritesManager ? "已初始化" : "未初始化";
+        document.getElementById("view-status").textContent =
+          window.showingFavoritesOnly ? "收藏項目" : "全部項目";
+        document.getElementById("favorites-count").textContent =
+          window.favoritesManager
+            ? window.favoritesManager.favorites.length
+            : "0";
+      }
+
+      function simulateLogin() {
+        console.log("=== 模擬用戶登入 ===");
+
+        // 創建測試用戶
+        testUser = {
+          id: "test-user-001",
+          username: "testuser",
+          email: "test@example.com",
+          profile: {
+            displayName: "測試用戶",
+            favoritesCount: 0,
+          },
+        };
+
+        // 模擬 AuthSystem
+        window.AuthSystem = class {
+          getCurrentUser() {
+            return testUser;
+          }
+          saveUsers() {
+            console.log("保存用戶數據");
+          }
+          login(user, remember) {
+            console.log("用戶登入:", user.username);
+          }
+        };
+
+        addResult("✅ 用戶登入成功", "success");
+        updateStatus();
+      }
+
+      function initializeFavorites() {
+        console.log("=== 初始化收藏管理器 ===");
+
+        if (!testUser) {
+          addResult("❌ 請先登入用戶", "error");
+          return;
+        }
+
+        try {
+          window.favoritesManager = new FavoritesManager();
+          addResult("✅ 收藏管理器初始化成功", "success");
+          updateStatus();
+        } catch (error) {
+          addResult(`❌ 收藏管理器初始化失敗: ${error.message}`, "error");
+          console.error("初始化錯誤:", error);
+        }
+      }
+
+      function addTestFavorite() {
+        console.log("=== 添加測試收藏 ===");
+
+        if (!window.favoritesManager) {
+          addResult("❌ 請先初始化收藏管理器", "error");
+          return;
+        }
+
+        const testItem = {
+          id: "test-exercise-001",
+          title: "測試運動項目",
+          level: "初級",
+          equipment: "無需器材",
+          timeReq: "10分鐘",
+          tags: ["有氧", "居家"],
+          imageUrl: "https://via.placeholder.com/300x200",
+          videoUrl: null,
+          isYouTube: false,
+        };
+
+        const success = window.favoritesManager.addToFavorites(testItem);
+
+        if (success) {
+          addResult("✅ 測試收藏添加成功", "success");
+        } else {
+          addResult("❌ 測試收藏添加失敗", "error");
+        }
+
+        updateStatus();
+      }
+
+      function toggleFavoritesView() {
+        console.log("=== 切換收藏視圖 ===");
+
+        if (!window.favoritesManager) {
+          addResult("❌ 請先初始化收藏管理器", "error");
+          return;
+        }
+
+        window.showingFavoritesOnly = !window.showingFavoritesOnly;
+
+        console.log("收藏視圖狀態:", window.showingFavoritesOnly);
+
+        addResult(
+          `✅ 已切換到${window.showingFavoritesOnly ? "收藏" : "全部"}視圖`,
+          "success"
+        );
+        updateStatus();
+      }
+
+      function checkFavoriteStatus() {
+        console.log("=== 檢查收藏狀態 ===");
+
+        if (!window.favoritesManager) {
+          addResult("❌ 收藏管理器未初始化", "error");
+          return;
+        }
+
+        const testId = "test-exercise-001";
+        const isFavorite = window.favoritesManager.isFavorite(testId);
+
+        console.log(`項目 ${testId} 收藏狀態:`, isFavorite);
+        console.log("當前收藏列表:", window.favoritesManager.favorites);
+
+        addResult(
+          `📊 測試項目收藏狀態: ${isFavorite ? "已收藏" : "未收藏"}`,
+          "info"
+        );
+      }
+
+      function clearDebug() {
+        debugOutput.textContent = "";
+        document.getElementById("test-results").innerHTML = "";
+      }
+
+      // 初始化狀態顯示
+      updateStatus();
+    </script>
+  </body>
+</html>

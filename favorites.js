@@ -1,19 +1,31 @@
 // 收藏管理系統
 class FavoritesManager {
   constructor() {
+    console.log('初始化收藏管理器...');
     this.authSystem = new AuthSystem();
     this.currentUser = this.authSystem.getCurrentUser();
     this.storageKey = 'maxSports_favorites';
+    
+    console.log('當前用戶:', this.currentUser ? this.currentUser.username : '未登入');
+    
     this.favorites = this.loadFavorites();
+    
+    console.log('收藏管理器初始化完成，收藏數量:', this.favorites.length);
   }
 
   // 載入用戶收藏
   loadFavorites() {
-    if (!this.currentUser) return {};
+    if (!this.currentUser) {
+      console.log('沒有當前用戶，返回空收藏列表');
+      return [];
+    }
     
     try {
       const allFavorites = JSON.parse(localStorage.getItem(this.storageKey) || '{}');
-      return allFavorites[this.currentUser.id] || [];
+      const userFavorites = allFavorites[this.currentUser.id] || [];
+      console.log(`載入用戶 ${this.currentUser.id} 的收藏:`, userFavorites.length, '個項目');
+      console.log('收藏詳情:', userFavorites);
+      return userFavorites;
     } catch (error) {
       console.error('載入收藏失敗:', error);
       return [];
@@ -42,7 +54,10 @@ class FavoritesManager {
 
   // 檢查項目是否已收藏
   isFavorite(itemId) {
-    return this.favorites.some(fav => fav.id === itemId);
+    const result = this.favorites.some(fav => fav.id === itemId);
+    console.log(`檢查收藏狀態 - 項目ID: ${itemId}, 結果: ${result}`);
+    console.log(`當前收藏列表:`, this.favorites.map(f => f.id));
+    return result;
   }
 
   // 添加到收藏
@@ -76,10 +91,20 @@ class FavoritesManager {
     };
 
     this.favorites.push(favoriteItem);
+    console.log(`添加收藏: ${item.title} (ID: ${item.id})`);
+    console.log('收藏後總數:', this.favorites.length);
+    
     this.saveFavorites();
     
     this.showToast(`已將「${item.title}」加入收藏`, 'success');
     this.updateFavoriteButtons();
+    
+    // 如果當前是收藏視圖，觸發重新篩選
+    if (window.showingFavoritesOnly && typeof applyFilters === 'function') {
+      console.log('在收藏視圖中添加收藏，重新篩選');
+      setTimeout(() => applyFilters(), 100);
+    }
+    
     return true;
   }
 
@@ -93,10 +118,20 @@ class FavoritesManager {
     }
 
     const removedItem = this.favorites.splice(index, 1)[0];
+    console.log(`移除收藏: ${removedItem.title} (ID: ${itemId})`);
+    console.log('移除後總數:', this.favorites.length);
+    
     this.saveFavorites();
     
     this.showToast(`已將「${removedItem.title}」從收藏中移除`, 'success');
     this.updateFavoriteButtons();
+    
+    // 如果當前是收藏視圖，觸發重新篩選
+    if (window.showingFavoritesOnly && typeof applyFilters === 'function') {
+      console.log('在收藏視圖中移除收藏，重新篩選');
+      setTimeout(() => applyFilters(), 100);
+    }
+    
     return true;
   }
 
