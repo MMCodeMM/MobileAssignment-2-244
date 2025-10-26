@@ -1,93 +1,831 @@
-/* 認證頁面樣式 */
+/* ===== 全新 Auth-Form 設計 ===== */
+
+/* 認證頁面容器 - 玻璃態設計 */
 .auth-container {
-  max-width: 400px;
+  max-width: 500px;
   margin: 0 auto;
-  padding: 20px;
-  min-height: calc(100vh - 120px);
+  padding: 25px;
+  min-height: calc(100vh - 100px);
   display: flex;
   align-items: center;
   justify-content: center;
+  background: 
+    radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
+    radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.3) 0%, transparent 50%),
+    linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  position: relative;
+  overflow: hidden;
 }
 
+.auth-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml,<svg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><g fill="%23ffffff" fill-opacity="0.05"><path d="m36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/></g></g></svg>') repeat;
+  pointer-events: none;
+  opacity: 0.3;
+}
+
+/* ===== 全新 auth-form 主體設計 ===== */
 .auth-form {
   width: 100%;
-  background: white;
-  border-radius: 12px;
-  padding: 30px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-  border: 1px solid #e1e5e9;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-radius: 24px;
+  padding: 45px 40px;
+  box-shadow: 
+    0 20px 60px rgba(0, 0, 0, 0.15),
+    0 8px 25px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 0 0 1px rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transform-style: preserve-3d;
 }
 
+/* 動態背景光效 */
+.auth-form::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: 
+    linear-gradient(
+      45deg,
+      transparent 30%,
+      rgba(56, 128, 255, 0.1) 50%,
+      transparent 70%
+    );
+  transform: rotate(-45deg);
+  animation: shimmer 3s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes shimmer {
+  0%, 100% { 
+    transform: rotate(-45deg) translateX(-100%); 
+  }
+  50% { 
+    transform: rotate(-45deg) translateX(100%); 
+  }
+}
+
+/* 懸停效果 */
+.auth-form:hover {
+  transform: translateY(-5px) rotateX(2deg);
+  box-shadow: 
+    0 30px 80px rgba(0, 0, 0, 0.2),
+    0 12px 35px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 0 0 1px rgba(255, 255, 255, 0.3);
+}
+
+/* ===== 重新設計的表單頭部 ===== */
 .auth-header {
   text-align: center;
-  margin-bottom: 30px;
+  margin-bottom: 40px;
+  position: relative;
+  z-index: 2;
 }
 
+/* 創新的標題設計 */
 .auth-header h2 {
-  color: #3880ff;
-  margin: 0 0 8px 0;
-  font-size: 24px;
-  font-weight: 600;
+  margin: 0 0 15px 0;
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -1px;
+  background: linear-gradient(
+    135deg,
+    #667eea 0%,
+    #764ba2 25%,
+    #f093fb 50%,
+    #f5576c 75%,
+    #4facfe 100%
+  );
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradientShift 4s ease-in-out infinite;
+  position: relative;
+}
+
+@keyframes gradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.auth-header h2::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(90deg, #667eea, #764ba2);
+  border-radius: 2px;
+  animation: lineExpand 0.8s ease-out;
+}
+
+@keyframes lineExpand {
+  from { width: 0; }
+  to { width: 60px; }
 }
 
 .auth-header p {
-  color: #666;
+  color: #64748b;
   margin: 0;
-  font-size: 14px;
-}
-
-.auth-form ion-item {
-  margin-bottom: 16px;
-  --border-radius: 8px;
-  --border-color: #d7dbe0;
-  --highlight-color: #3880ff;
-}
-
-.auth-form ion-input {
-  --padding-start: 16px;
-  --padding-end: 16px;
-  --padding-top: 12px;
-  --padding-bottom: 12px;
-}
-
-.auth-button {
-  margin-top: 20px;
-  --border-radius: 8px;
-  height: 48px;
+  font-size: 16px;
   font-weight: 500;
-  --background: linear-gradient(135deg, #3880ff 0%, #3dc2ff 100%);
+  line-height: 1.5;
+  opacity: 0.8;
+}
+
+/* ===== 革新的表單項目設計 ===== */
+.auth-form ion-item {
+  margin-bottom: 25px;
+  --border-radius: 16px;
+  --border-color: transparent;
+  --highlight-color: #667eea;
+  --background: rgba(255, 255, 255, 0.7);
+  border: 2px solid transparent;
+  border-radius: 16px;
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+  background: 
+    linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7)),
+    linear-gradient(135deg, transparent, rgba(103, 126, 234, 0.05));
+}
+
+/* 動態邊框效果 */
+.auth-form ion-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 16px;
+  padding: 2px;
+  background: linear-gradient(135deg, #667eea, #764ba2, #f093fb);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: destination-out;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.auth-form ion-item:hover::before {
+  opacity: 1;
+}
+
+.auth-form ion-item:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 
+    0 12px 35px rgba(103, 126, 234, 0.15),
+    0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.auth-form ion-item:focus-within {
+  transform: translateY(-2px) scale(1.01);
+  box-shadow: 
+    0 0 0 4px rgba(103, 126, 234, 0.2),
+    0 8px 25px rgba(103, 126, 234, 0.15),
+    0 3px 12px rgba(0, 0, 0, 0.1);
+}
+
+.auth-form ion-item:focus-within::before {
+  opacity: 1;
+  background: linear-gradient(135deg, #667eea, #4facfe);
+}
+
+/* ===== 輸入框重新設計 ===== */
+.auth-form ion-input {
+  --padding-start: 24px;
+  --padding-end: 24px;
+  --padding-top: 20px;
+  --padding-bottom: 20px;
+  --color: #2d3748;
+  --placeholder-color: #a0aec0;
+  font-size: 16px;
+  font-weight: 500;
+  font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+}
+
+.auth-form ion-input input {
+  background: transparent !important;
+  border: none !important;
+  outline: none !important;
+}
+
+/* ===== 全新按鈕設計 ===== */
+.auth-button {
+  margin-top: 30px;
+  --border-radius: 16px;
+  height: 56px;
+  font-weight: 700;
+  font-size: 17px;
+  letter-spacing: 0.5px;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  box-shadow: 
+    0 8px 30px rgba(103, 126, 234, 0.35),
+    0 3px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* 按鈕波浪動畫 */
+.auth-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, 
+    transparent, 
+    rgba(255, 255, 255, 0.4), 
+    transparent
+  );
+  transition: left 0.5s ease;
+}
+
+.auth-button:hover::before {
+  left: 100%;
+}
+
+.auth-button:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 
+    0 15px 45px rgba(103, 126, 234, 0.4),
+    0 6px 20px rgba(0, 0, 0, 0.2);
+  background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+}
+
+.auth-button:active {
+  transform: translateY(-1px) scale(0.98);
+  box-shadow: 
+    0 5px 15px rgba(103, 126, 234, 0.3),
+    0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .auth-button i {
-  margin-right: 8px;
+  margin-right: 12px;
+  font-size: 20px;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
 }
 
+/* ===== 重新設計的切換區域 ===== */
 .auth-switch {
   text-align: center;
-  margin-top: 20px;
-  padding-top: 20px;
-  border-top: 1px solid #e1e5e9;
+  margin-top: 35px;
+  padding-top: 30px;
+  position: relative;
+}
+
+.auth-switch::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #cbd5e1, transparent);
 }
 
 .auth-switch p {
   margin: 0;
-  color: #666;
-  font-size: 14px;
+  color: #64748b;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.auth-switch a {
+  color: #667eea;
+  text-decoration: none;
+  font-weight: 700;
+  position: relative;
+  transition: all 0.3s ease;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.auth-switch a::after {
+  content: '';
+  position: absolute;
+  bottom: -3px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #667eea, #764ba2);
+  transition: width 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.auth-switch a:hover {
+  transform: translateY(-2px);
+}
+
+.auth-switch a:hover::after {
+  width: 100%;
+}
+
+/* ===== 忘記密碼連結重新設計 ===== */
+.auth-links {
+  text-align: center;
+  margin-top: 25px;
+}
+
+.auth-links a {
+  color: #64748b;
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  position: relative;
+  padding: 8px 16px;
+  border-radius: 12px;
+  display: inline-block;
+}
+
+.auth-links a:hover {
+  color: #667eea;
+  background: rgba(103, 126, 234, 0.1);
+  transform: translateY(-2px);
+}
+
+/* ===== 全新複選框設計 ===== */
+.auth-form ion-checkbox {
+  --border-radius: 8px;
+  --border-width: 2px;
+  --border-color: #cbd5e1;
+  --checkmark-color: white;
+  --background-checked: linear-gradient(135deg, #667eea, #764ba2);
+  --border-color-checked: #667eea;
+  margin-right: 15px;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  position: relative;
+}
+
+.auth-form ion-checkbox::before {
+  content: '';
+  position: absolute;
+  top: -4px;
+  left: -4px;
+  right: -4px;
+  bottom: -4px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: -1;
+}
+
+.auth-form ion-checkbox:hover {
+  --border-color: #667eea;
+  transform: scale(1.1);
+}
+
+.auth-form ion-checkbox:hover::before {
+  opacity: 0.1;
+}
+
+.auth-form .terms-label {
+  font-size: 15px;
+  color: #64748b;
+  line-height: 1.5;
+  font-weight: 500;
+}
+
+.auth-form .terms-label a {
+  color: #667eea;
+  text-decoration: none;
+  font-weight: 700;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.auth-form .terms-label a::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: #667eea;
+  transition: width 0.3s ease;
+}
+
+.auth-form .terms-label a:hover::after {
+  width: 100%;
+}
+
+/* ===== 響應式設計 ===== */
+@media (max-width: 768px) {
+  .auth-container {
+    padding: 20px;
+    min-height: calc(100vh - 80px);
+  }
+  
+  .auth-form {
+    padding: 35px 30px;
+    border-radius: 20px;
+  }
+  
+  .auth-header h2 {
+    font-size: 28px;
+  }
+  
+  .auth-form ion-item {
+    margin-bottom: 22px;
+  }
+  
+  .auth-form ion-input {
+    --padding-start: 20px;
+    --padding-end: 20px;
+    --padding-top: 18px;
+    --padding-bottom: 18px;
+  }
+  
+  .auth-button {
+    height: 52px;
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .auth-container {
+    padding: 15px;
+  }
+  
+  .auth-form {
+    padding: 30px 25px;
+    border-radius: 18px;
+  }
+  
+  .auth-header h2 {
+    font-size: 26px;
+  }
+  
+  .auth-form ion-input {
+    --padding-start: 18px;
+    --padding-end: 18px;
+    --padding-top: 16px;
+    --padding-bottom: 16px;
+    font-size: 15px;
+  }
+  
+  .auth-button {
+    height: 50px;
+    font-size: 15px;
+    margin-top: 25px;
+  }
+  
+  .auth-button i {
+    margin-right: 10px;
+    font-size: 18px;
+  }
+}
+
+/* ===== 載入狀態 ===== */
+.auth-form.loading {
+  pointer-events: none;
+  position: relative;
+}
+
+.auth-form.loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 50px;
+  height: 50px;
+  border: 4px solid rgba(103, 126, 234, 0.2);
+  border-top: 4px solid #667eea;
+  border-radius: 50%;
+  animation: ultraSpin 1s linear infinite;
+  z-index: 1000;
+  box-shadow: 0 0 20px rgba(103, 126, 234, 0.3);
+}
+
+@keyframes ultraSpin {
+  0% { transform: translate(-50%, -50%) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* ===== 錯誤和成功狀態 ===== */
+.auth-error {
+  background: linear-gradient(135deg, #fee2e2, #fecaca);
+  border: 2px solid #f87171;
+  color: #dc2626;
+  padding: 16px 20px;
+  border-radius: 12px;
+  margin-top: 20px;
+  font-size: 15px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  animation: errorShake 0.6s ease-in-out;
+  box-shadow: 0 4px 15px rgba(248, 113, 113, 0.2);
+}
+
+.auth-error i {
+  margin-right: 12px;
+  font-size: 18px;
+}
+
+@keyframes errorShake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-8px); }
+  75% { transform: translateX(8px); }
+}
+
+.auth-success {
+  background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+  border: 2px solid #34d399;
+  color: #065f46;
+  padding: 16px 20px;
+  border-radius: 12px;
+  margin-top: 20px;
+  font-size: 15px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  animation: successPulse 0.8s ease-out;
+  box-shadow: 0 4px 15px rgba(52, 211, 153, 0.2);
+}
+
+.auth-success i {
+  margin-right: 12px;
+  font-size: 18px;
+}
+
+@keyframes successPulse {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ===== 輸入驗證狀態 ===== */
+.auth-form ion-item.error {
+  border-color: #f87171;
+  background: rgba(254, 242, 242, 0.8);
+  animation: errorShake 0.4s ease-in-out;
+  box-shadow: 0 0 0 3px rgba(248, 113, 113, 0.2);
+}
+
+.auth-form ion-item.success {
+  border-color: #34d399;
+  background: rgba(240, 253, 244, 0.8);
+  box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.2);
+}
+
+.auth-form ion-item.success::after {
+  content: '✓';
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #34d399;
+  font-weight: bold;
+  font-size: 20px;
+  animation: checkmarkAppear 0.5s ease-out;
+}
+
+@keyframes checkmarkAppear {
+  from {
+    opacity: 0;
+    transform: translateY(-50%) scale(0);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(-50%) scale(1);
+  }
+}
+
+/* ===== 深色模式支援 ===== */
+@media (prefers-color-scheme: dark) {
+  .auth-container {
+    background: 
+      radial-gradient(circle at 20% 80%, rgba(99, 102, 241, 0.3) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(236, 72, 153, 0.3) 0%, transparent 50%),
+      radial-gradient(circle at 40% 40%, rgba(59, 130, 246, 0.3) 0%, transparent 50%),
+      linear-gradient(135deg, #1e293b 0%, #334155 100%);
+  }
+  
+  .auth-form {
+    background: rgba(30, 41, 59, 0.95);
+    border-color: rgba(71, 85, 105, 0.3);
+    color: #e2e8f0;
+  }
+  
+  .auth-form ion-item {
+    background: rgba(51, 65, 85, 0.7);
+    border-color: rgba(71, 85, 105, 0.5);
+  }
+  
+  .auth-form ion-input {
+    --color: #e2e8f0;
+    --placeholder-color: #94a3b8;
+  }
+  
+  .auth-header p {
+    color: #94a3b8;
+  }
+  
+  .auth-switch p {
+    color: #94a3b8;
+  }
+  
+  .auth-links a {
+    color: #94a3b8;
+  }
+  
+  .auth-form .terms-label {
+    color: #94a3b8;
+  }
+}
+  font-size: 16px;
+  letter-spacing: 0.5px;
+  --background: linear-gradient(135deg, #3880ff 0%, #5260ff 50%, #743aff 100%);
+  --background-hover: linear-gradient(135deg, #2563eb 0%, #4338ca 50%, #6d28d9 100%);
+  --color: white;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  box-shadow: 
+    0 4px 15px rgba(56, 128, 255, 0.3),
+    0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.auth-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.auth-button:hover::before {
+  left: 100%;
+}
+
+.auth-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 6px 20px rgba(56, 128, 255, 0.4),
+    0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.auth-button:active {
+  transform: translateY(0);
+  box-shadow: 
+    0 2px 8px rgba(56, 128, 255, 0.3),
+    0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+.auth-button i {
+  margin-right: 10px;
+  font-size: 18px;
+}
+
+/* ===== 切換連結樣式 ===== */
+.auth-switch {
+  text-align: center;
+  margin-top: 30px;
+  padding-top: 25px;
+  border-top: 1px solid #e2e8f0;
+  position: relative;
+}
+
+.auth-switch::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 50px;
+  height: 2px;
+  background: linear-gradient(90deg, #3880ff, #5260ff);
+  border-radius: 1px;
+}
+
+.auth-switch p {
+  margin: 0;
+  color: #64748b;
+  font-size: 15px;
+  font-weight: 400;
 }
 
 .auth-switch a {
   color: #3880ff;
   text-decoration: none;
-  font-weight: 500;
+  font-weight: 600;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.auth-switch a::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #3880ff, #5260ff);
+  transition: width 0.3s ease;
 }
 
 .auth-switch a:hover {
-  text-decoration: underline;
+  color: #2563eb;
+  transform: translateY(-1px);
 }
 
+.auth-switch a:hover::after {
+  width: 100%;
+}
+
+/* ===== 忘記密碼連結 ===== */
 .auth-links {
   text-align: center;
-  margin-top: 16px;
+  margin-top: 20px;
+}
+
+.auth-links a {
+  color: #64748b;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.auth-links a:hover {
+  color: #3880ff;
+  transform: translateY(-1px);
+}
+
+/* ===== 複選框樣式 ===== */
+.auth-form ion-checkbox {
+  --border-radius: 6px;
+  --border-width: 2px;
+  --border-color: #cbd5e1;
+  --checkmark-color: white;
+  --background-checked: #3880ff;
+  --border-color-checked: #3880ff;
+  margin-right: 12px;
+  transition: all 0.3s ease;
+}
+
+.auth-form ion-checkbox:hover {
+  --border-color: #3880ff;
+  transform: scale(1.05);
+}
+
+.auth-form .terms-label {
+  font-size: 14px;
+  color: #64748b;
+  line-height: 1.4;
+}
+
+.auth-form .terms-label a {
+  color: #3880ff;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.auth-form .terms-label a:hover {
+  text-decoration: underline;
 }
 
 .auth-links a {
@@ -877,6 +1615,263 @@ ion-badge.favorites-count {
   display: flex;
   flex-direction: column;
   gap: 12px;
+}
+
+/* ===== 響應式設計 - auth-form ===== */
+@media (max-width: 768px) {
+  .auth-container {
+    padding: 15px;
+    min-height: calc(100vh - 100px);
+  }
+  
+  .auth-form {
+    padding: 30px 25px;
+    border-radius: 12px;
+  }
+  
+  .auth-header h2 {
+    font-size: 24px;
+  }
+  
+  .auth-header p {
+    font-size: 14px;
+  }
+  
+  .auth-form ion-item {
+    margin-bottom: 18px;
+  }
+  
+  .auth-form ion-input {
+    --padding-start: 16px;
+    --padding-end: 16px;
+    --padding-top: 14px;
+    --padding-bottom: 14px;
+  }
+  
+  .auth-button {
+    height: 48px;
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .auth-container {
+    padding: 10px;
+  }
+  
+  .auth-form {
+    padding: 25px 20px;
+    border-radius: 10px;
+  }
+  
+  .auth-header h2 {
+    font-size: 22px;
+  }
+  
+  .auth-form ion-input {
+    --padding-start: 14px;
+    --padding-end: 14px;
+    --padding-top: 12px;
+    --padding-bottom: 12px;
+    font-size: 15px;
+  }
+  
+  .auth-button {
+    height: 46px;
+    font-size: 14px;
+    margin-top: 20px;
+  }
+  
+  .auth-button i {
+    margin-right: 8px;
+    font-size: 16px;
+  }
+}
+
+/* ===== 載入動畫 ===== */
+.auth-form.loading {
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+.auth-form.loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 40px;
+  height: 40px;
+  border: 4px solid #f3f4f6;
+  border-top: 4px solid #3880ff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  z-index: 1000;
+}
+
+@keyframes spin {
+  0% { transform: translate(-50%, -50%) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* ===== 錯誤訊息樣式 ===== */
+.auth-error {
+  background: linear-gradient(135deg, #fee2e2, #fecaca);
+  border: 1px solid #f87171;
+  color: #dc2626;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-top: 15px;
+  font-size: 14px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  animation: shake 0.5s ease-in-out;
+}
+
+.auth-error i {
+  margin-right: 8px;
+  font-size: 16px;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
+/* ===== 成功訊息樣式 ===== */
+.auth-success {
+  background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+  border: 1px solid #34d399;
+  color: #065f46;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-top: 15px;
+  font-size: 14px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  animation: fadeInUp 0.5s ease-out;
+}
+
+.auth-success i {
+  margin-right: 8px;
+  font-size: 16px;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===== 輸入框驗證狀態 ===== */
+.auth-form ion-item.error {
+  --border-color: #f87171;
+  --background: #fef2f2;
+  animation: shake 0.3s ease-in-out;
+}
+
+.auth-form ion-item.success {
+  --border-color: #34d399;
+  --background: #f0fdf4;
+}
+
+.auth-form ion-item.success::after {
+  content: '✓';
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #34d399;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+/* ===== 表單切換動畫 ===== */
+.auth-form {
+  animation: slideInUp 0.5s ease-out;
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===== 焦點增強效果 ===== */
+.auth-form ion-input:focus-within {
+  --background: white;
+  box-shadow: 
+    0 0 0 3px rgba(56, 128, 255, 0.1),
+    0 4px 12px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+/* ===== 深色模式支援 ===== */
+@media (prefers-color-scheme: dark) {
+  .auth-container {
+    background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+  }
+  
+  .auth-form {
+    background: #2d3748;
+    border-color: #4a5568;
+    color: #e2e8f0;
+  }
+  
+  .auth-form::before {
+    background: linear-gradient(90deg, #4299e1, #667eea, #764ba2);
+  }
+  
+  .auth-header h2 {
+    background: linear-gradient(135deg, #4299e1, #667eea);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  .auth-header p {
+    color: #a0aec0;
+  }
+  
+  .auth-form ion-item {
+    --background: #374151;
+    --border-color: #4b5563;
+  }
+  
+  .auth-form ion-item:hover {
+    --background: #4b5563;
+    --border-color: #6b7280;
+  }
+  
+  .auth-form ion-input {
+    --color: #e2e8f0;
+    --placeholder-color: #9ca3af;
+  }
+  
+  .auth-switch p {
+    color: #a0aec0;
+  }
+  
+  .auth-links a {
+    color: #a0aec0;
+  }
+  
+  .auth-links a:hover {
+    color: #4299e1;
+  }
 }
 
 /* 響應式 - 收藏摘要 */
