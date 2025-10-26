@@ -231,7 +231,7 @@
   --padding-bottom: 22px;
   --color: rgba(255, 255, 255, 0.95);
   --placeholder-color: rgba(255, 255, 255, 0.6);
-  font-size: 17px;
+  font-size: 18px;
   font-weight: 600;
   font-family: 'Inter', 'SF Pro Display', system-ui, sans-serif;
 }
@@ -241,6 +241,84 @@
   border: none !important;
   outline: none !important;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* ===== 針對 input-outline-container 和 sc-ion-input-md 的特定樣式 ===== */
+.input-outline-container,
+.sc-ion-input-md {
+  background: rgba(103, 126, 234, 0.08) !important;
+  backdrop-filter: blur(15px) !important;
+  border-radius: 18px !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.2) !important;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+  box-shadow: 
+    0 4px 15px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+}
+
+.input-outline-container:hover,
+.sc-ion-input-md:hover {
+  background: rgba(103, 126, 234, 0.12) !important;
+  border-color: rgba(255, 255, 255, 0.35) !important;
+  box-shadow: 
+    0 6px 20px rgba(103, 126, 234, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+}
+
+.input-outline-container:focus-within,
+.sc-ion-input-md:focus-within {
+  background: rgba(103, 126, 234, 0.15) !important;
+  border-color: rgba(240, 147, 251, 0.6) !important;
+  box-shadow: 
+    0 0 0 3px rgba(103, 126, 234, 0.25),
+    0 8px 25px rgba(103, 126, 234, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4) !important;
+}
+
+/* 輸入框內文字樣式調整 */
+.input-outline-container input,
+.sc-ion-input-md input,
+.input-outline-container .native-input,
+.sc-ion-input-md .native-input {
+  font-size: 18px !important;
+  font-weight: 600 !important;
+  color: rgba(255, 255, 255, 0.95) !important;
+  letter-spacing: 0.5px !important;
+  line-height: 1.4 !important;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2) !important;
+  background: transparent !important;
+  padding: 20px 24px !important;
+}
+
+/* placeholder 樣式調整 */
+.input-outline-container input::placeholder,
+.sc-ion-input-md input::placeholder,
+.input-outline-container .native-input::placeholder,
+.sc-ion-input-md .native-input::placeholder {
+  color: rgba(255, 255, 255, 0.65) !important;
+  font-size: 17px !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.3px !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* 額外確保輸入框樣式 */
+.auth-form .input-outline-container,
+.auth-form .sc-ion-input-md,
+.auth-form ion-input .input-outline-container,
+.auth-form ion-input .sc-ion-input-md {
+  background: rgba(103, 126, 234, 0.08) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+/* 確保在所有狀態下文字顏色正確 */
+.auth-form input,
+.auth-form textarea,
+.auth-form .native-input,
+.auth-form ion-input input,
+.auth-form ion-textarea textarea {
+  color: rgba(255, 255, 255, 0.95) !important;
+  background: transparent !important;
 }
 
 /* ===== 未來感按鈕設計 ===== */
@@ -487,6 +565,23 @@
     --padding-end: 24px;
     --padding-top: 20px;
     --padding-bottom: 20px;
+    font-size: 17px;
+  }
+  
+  /* 平板響應式調整 - input-outline-container */
+  .input-outline-container input,
+  .sc-ion-input-md input,
+  .input-outline-container .native-input,
+  .sc-ion-input-md .native-input {
+    font-size: 17px !important;
+    padding: 18px 22px !important;
+  }
+  
+  .input-outline-container input::placeholder,
+  .sc-ion-input-md input::placeholder,
+  .input-outline-container .native-input::placeholder,
+  .sc-ion-input-md .native-input::placeholder {
+    font-size: 16px !important;
   }
   
   .auth-button {
@@ -515,6 +610,22 @@
     --padding-top: 18px;
     --padding-bottom: 18px;
     font-size: 16px;
+  }
+  
+  /* 手機響應式調整 - input-outline-container */
+  .input-outline-container input,
+  .sc-ion-input-md input,
+  .input-outline-container .native-input,
+  .sc-ion-input-md .native-input {
+    font-size: 16px !important;
+    padding: 16px 20px !important;
+  }
+  
+  .input-outline-container input::placeholder,
+  .sc-ion-input-md input::placeholder,
+  .input-outline-container .native-input::placeholder,
+  .sc-ion-input-md .native-input::placeholder {
+    font-size: 15px !important;
   }
   
   .auth-button {
